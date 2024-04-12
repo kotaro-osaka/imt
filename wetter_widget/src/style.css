@@ -1,0 +1,25 @@
+body {
+    display: flex;
+    justify-content: center;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    min-width: 15rem;
+    margin: 2rem;
+    padding: 1rem;
+    border-radius: 1rem;
+    background: linear-gradient(45deg, #9bf8f4, #6f7bf7);
+}
+
+#weather-icon {
+    width: auto;
+    height: 2rem;
+}
+
+#details-container {
+    display: flex;
+}
