@@ -4,10 +4,158 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wetter Widget</title>
-    <link rel="stylesheet" href="./style.css">
-    <script defer src="./index.js"></script>
 </head>
 <body>
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Poppins:700|Poppins:400');
+
+/* Variables */
+:root {
+    --bright-background: linear-gradient(0deg, #80BBE9 0%, #3A80FF 100%);
+    --dark-background: linear-gradient(0deg, #383C47 0%, #1e1e2b 100%);
+}
+
+/* Reset */
+*,
+*::after,
+*::before {
+    border: 0;
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+input,
+textarea,
+button {
+    font-family: inherit;
+	font-size: inherit;
+	color: inherit;
+	background: none;
+	-webkit-appearance: none;
+	appearance: none;
+	-moz-appearance: none;
+	border-radius: 0%;
+	-webkit-border-radius: 0;
+}
+
+/* Fonts */
+body {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.01);
+    color: white;
+}
+
+h1, h2, h3, h4 {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+html {font-size: 100%;} /* 16px */
+
+h1 {font-size: 3.366rem; /* 53.92px */}
+h2 {font-size: 2.525rem; /* 40.32px */}
+h3 {font-size: 1.894rem; /* 30.24px */}
+h4 {font-size: 1.421rem; /* 22.72px */}
+h5 {
+    font-size: 1.066rem; /* 17.12px */
+    font-weight: 600;
+}
+
+small {font-size: 0.600rem; /* 9.6px */}
+sup {
+    font-weight: 350;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+html { font-size: 100%; }
+
+
+/* Main Styles */
+body {
+    display: flex;
+    justify-content: center;
+    flex-wrap: nowrap;
+
+    padding: 5rem;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 2.5rem;
+    border-radius: 2.5rem;
+    white-space: nowrap;
+    background: var(--bright-background);
+}
+
+.weather-icon {
+    display: none;
+    width: 15rem;
+    height: auto;
+}
+
+#icon-10d { display: inline; }
+
+#temperature-description-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#temp-unit-container {
+    display: flex;
+    padding-left: 2rem;
+}
+
+#temperature sup { opacity: 75%; }
+
+#weather-description {
+    white-space: wrap;
+    opacity: 95%;
+}
+
+#details-container {
+    display: flex;
+    justify-content: space-around;
+    gap: 2rem;
+
+    margin-top: 2.5rem;
+}
+
+.details-value-unit-container { padding-left: 15%; }
+
+.details-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: .5rem;
+}
+
+.details-unit { opacity: 60%; }
+
+#wind-unit { font-size: 1rem; }
+
+/* Media queries */
+
+/* Auto adjust widget background color to device preference */
+@media (prefers-color-scheme: dark) {
+    main {
+        background: var(--dark-background);
+    }
+}
+
+/* When screensize ... resize fontsize */
+/* @media screen (min-width: "") {
+    
+} */
+    </style>
     <main>
         <header><h2 id="city-name">Porte au Prince</h2></header>
         <!-- Meteocons from "https://bas.dev/work/meteocons" -->
@@ -56,5 +204,9 @@
             </div>
         </section>
     </main>
+
+    <script defer>
+
+    </script>
 </body>
 </html>
