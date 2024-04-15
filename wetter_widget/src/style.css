@@ -79,6 +79,7 @@ main {
     align-items: center;
     justify-content: space-between;
 
+    width: 24.5188rem;
     padding: 2.5rem;
     border-radius: 2.5rem;
     white-space: nowrap;
@@ -91,7 +92,7 @@ main {
     height: auto;
 }
 
-#icon-10d { display: inline; }
+/* #icon-10d { display: inline; } */
 
 #temperature-description-container {
     display: flex;
@@ -136,11 +137,11 @@ main {
 /* Media queries */
 
 /* Auto adjust widget background color to device preference */
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
     main {
         background: var(--dark-background);
     }
-}
+} */
 
 /* When screensize ... resize fontsize */
 /* @media screen (min-width: "") {
