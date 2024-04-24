@@ -108,6 +108,7 @@ main {
 #temperature sup { opacity: 75%; }
 
 #weather-description {
+    text-align: center;
     white-space: wrap;
     opacity: 95%;
 }
