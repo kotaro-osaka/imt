@@ -79,7 +79,7 @@ main {
     align-items: center;
     justify-content: space-between;
 
-    width: 24.5188rem;
+    min-width: 24.5188rem;
     padding: 2.5rem;
     border-radius: 2.5rem;
     white-space: nowrap;

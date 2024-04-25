@@ -42,10 +42,10 @@ const fetchWeatherData = (city) => {
         descriptionElement.textContent = `${toTitleCase(weatherDescription)}`;
 
         windElement.innerHTML = '';
-        windElement.innerHTML = `${data.wind.speed}<sup class="details-unit" id="wind-unit">km/h</sup>`
+        windElement.innerHTML = `${data.wind.speed}<span class="details-unit" id="wind-unit">km/h</span>`
 
         humidityElement.innerHTML = '';
-        humidityElement.innerHTML = `${data.main.humidity}<sup class="details-unit" id="humidity-unit">%</sup>`;
+        humidityElement.innerHTML = `${data.main.humidity}<span class="details-unit" id="humidity-unit">%</span>`;
 
         feelsLikeElement.innerHTML = '';
         feelsLikeElement.innerHTML = `${(data.main.feels_like-273.15).toFixed(1)}<sup class="details-unit" id="feels-like-unit">°C</sup>`;
