@@ -4,10 +4,209 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wetter Widget</title>
-    <link rel="stylesheet" href="./style.css">
-    <script defer src="./index.js"></script>
 </head>
 <body>
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Poppins:700|Poppins:400');
+
+        /* Variables */
+        :root {
+            --bright-background: linear-gradient(0deg, #80BBE9 0%, #3A80FF 100%);
+            --dark-background: linear-gradient(0deg, #383C47 0%, #1e1e2b 100%);
+        }
+
+        /* Reset */
+        *,
+        *::after,
+        *::before {
+            border: 0;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        input,
+        textarea,
+        button {
+            font-family: inherit;
+            font-size: inherit;
+            color: inherit;
+            background: none;
+            -webkit-appearance: none;
+            appearance: none;
+            -moz-appearance: none;
+            border-radius: 0%;
+            -webkit-border-radius: 0;
+        }
+
+        /* Fonts */
+        body {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 400;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.01);
+            color: white;
+        }
+
+        h1, h2, h3, h4 {
+        font-family: 'Poppins', sans-serif;
+        font-weight: 700;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        html {font-size: 100%;} /* 16px */
+
+        h1 {font-size: 3.366rem; /* 53.92px */}
+        h2 {font-size: 2.525rem; /* 40.32px */}
+        h3 {font-size: 1.894rem; /* 30.24px */}
+        h4 {font-size: 1.421rem; /* 22.72px */}
+        h5 {
+            font-size: 1.066rem; /* 17.12px */
+            font-weight: 600;
+        }
+
+        small {font-size: 0.600rem; /* 9.6px */}
+        sup {
+            font-weight: 350;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        html { font-size: 100%; }
+
+
+        /* Main Styles */
+        body {
+            display: flex;
+            justify-content: center;
+            flex-wrap: nowrap;
+
+            padding: 5rem;
+        }
+
+        .skeleton-ui {
+            visibility: hidden;
+        }
+
+        main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+
+            min-width: 24.5188rem;
+            min-height: 43.4956rem;
+            padding: 2.5rem;
+            border-radius: 4rem;
+            white-space: nowrap;
+            background: var(--bright-background);
+        }
+
+        #top-nav {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-bottom: 1.5rem;
+        }
+
+        .top-nav-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+
+            min-height: 44px;
+            padding: 0.5rem;
+            border-radius: 2rem;
+            background-color: #50a1df;
+            cursor: pointer;
+        }
+
+        .top-nav-item:active {
+            background-color: #7bbdf0;
+        }
+
+        #time-refresh-container {
+            min-width: 85px;
+        }
+
+        #refreshing-icon {
+            display: none;
+        }
+
+        #settings-icon {
+            min-width: 44px;
+            min-height: 44px;
+        }
+
+        #skeleton-weather-icon {
+            width: 240px;
+            height: 240px;
+        }
+
+        .weather-icon {
+            display: none;
+            width: 15rem;
+            height: auto;
+        }
+
+        /* #icon-10d { display: inline; } */
+
+        #temperature-description-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #temp-unit-container {
+            display: flex;
+            padding-left: 2rem;
+        }
+
+        #temperature sup { opacity: 75%; }
+
+        #weather-description {
+            text-align: center;
+            white-space: wrap;
+            opacity: 95%;
+        }
+
+        #details-container {
+            display: flex;
+            justify-content: space-around;
+            gap: 2rem;
+
+            margin-top: 2.5rem;
+        }
+
+        .details-value-unit-container { padding-left: 15%; }
+
+        .details-item {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: .5rem;
+        }
+
+        .details-unit { opacity: 60%; }
+
+        #wind-unit { 
+            font-size: 1rem;
+            font-weight: 200;
+        }
+
+        #humidity-unit {
+            font-weight: 200;
+        }
+
+        /* Media queries */
+
+        /* Auto adjust widget background color to device preference */
+        /* @media (prefers-color-scheme: dark) {
+            main {
+                background: var(--dark-background);
+            }
+        } */
+    </style>
     <main>
         <header id="top-nav">
             <div class="top-nav-item" id="time-refresh-container">
@@ -67,5 +266,89 @@
             
         </section>
     </main>
+    <script defer>
+        const timeRefreshContainerElement = document.getElementById('time-refresh-container');
+        const timeElement = document.getElementById('time');
+        const refreshElement = document.getElementById('refresh-icon');
+        const refreshingElement = document.getElementById('refreshing-icon');
+        const cityElement = document.getElementById('city-name');
+        const skeletonWeatherIconElement = document.getElementById('skeleton-weather-icon');
+        const tempElement = document.getElementById('temperature');
+        const descriptionElement = document.getElementById('weather-description');
+        const windElement = document.getElementById('wind-val');
+        const humidityElement = document.getElementById('humidity-val');
+        const feelsLikeElement = document.getElementById('feels-like-val');
+
+        const API_KEY = '6789d5a6b5cb0ce6f47e021e1fafbf6e';
+
+        const refresh = () => {
+            refreshElement.style.display = 'none';
+            refreshingElement.style.display = 'inline';
+
+            setTimeout(() => {
+                timeElement.textContent = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', hour12: false});
+
+                fetchWeatherData('Osaka');
+
+                refreshingElement.style.display = 'none';
+                refreshElement.style.display = 'inline';
+                skeletonWeatherIconElement.style.display = 'none';
+            }, 2000);
+        }
+
+        const toTitleCase = (str) => {
+        return str.replace(/\w\S*/g, (txt) => {
+            return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+        });
+        }
+
+        const fetchWeatherData = (city) => {
+            const url = `http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}`;    
+
+            fetch(url, {
+                method: 'POST',
+                body: JSON.stringify({ city: city })
+            })
+            .then(res => res.json())
+            .then(data => {
+                const city = data.name;
+                const temperature = Math.floor(data.main.temp - 273.15);
+                const weatherDescription = data.weather[0].description;
+
+                cityElement.innerHTML = ''; // Vorherige Inhalte loeschen
+                cityElement.textContent += `${city}`;
+                
+                const weatherIcon = `icon-${data.weather[0].icon}`;
+                console.log(weatherIcon);
+                document.getElementById(weatherIcon).style.display = 'inline';
+
+                console.log(data.weather.icon);
+
+                tempElement.innerHTML = '';
+                tempElement.innerHTML += `${temperature}<sup>°C</sup></sup>`;
+                
+                descriptionElement.innerHTML = '';
+                descriptionElement.textContent = `${toTitleCase(weatherDescription)}`;
+
+                windElement.innerHTML = '';
+                windElement.innerHTML = `${data.wind.speed}<span class="details-unit" id="wind-unit">km/h</span>`
+
+                humidityElement.innerHTML = '';
+                humidityElement.innerHTML = `${data.main.humidity}<span class="details-unit" id="humidity-unit">%</span>`;
+
+                feelsLikeElement.innerHTML = '';
+                feelsLikeElement.innerHTML = `${(data.main.feels_like-273.15).toFixed(1)}<sup class="details-unit" id="feels-like-unit">°C</sup>`;
+
+                console.log(data);
+            })
+            .catch(err => {
+                console.error('Error fetching weather data:', err);
+            });
+        }
+
+        timeRefreshContainerElement.addEventListener('click', refresh);
+
+        refresh();
+    </script>
 </body>
 </html>

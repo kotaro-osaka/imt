@@ -95,29 +95,37 @@ main {
     display: flex;
     justify-content: space-between;
     width: 100%;
+    margin-bottom: 1.5rem;
 }
 
-#time-refresh-container {
+.top-nav-item {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 5px;
 
-    min-width: 85px;
     min-height: 44px;
     padding: 0.5rem;
-    margin-bottom: 1.5rem;
     border-radius: 2rem;
     background-color: #50a1df;
     cursor: pointer;
 }
 
-#time-refresh-container:active {
+.top-nav-item:active {
     background-color: #7bbdf0;
+}
+
+#time-refresh-container {
+    min-width: 85px;
 }
 
 #refreshing-icon {
     display: none;
+}
+
+#settings-icon {
+    min-width: 44px;
+    min-height: 44px;
 }
 
 #skeleton-weather-icon {
