@@ -172,7 +172,14 @@ main {
 
 .details-unit { opacity: 60%; }
 
-#wind-unit { font-size: 1rem; }
+#wind-unit { 
+    font-size: 1rem;
+    font-weight: 200;
+}
+
+#humidity-unit {
+    font-weight: 200;
+}
 
 /* Media queries */
 
