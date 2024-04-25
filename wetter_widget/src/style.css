@@ -73,6 +73,10 @@ body {
     padding: 5rem;
 }
 
+.skeleton-ui {
+    visibility: hidden;
+}
+
 main {
     display: flex;
     flex-direction: column;
@@ -80,10 +84,45 @@ main {
     justify-content: space-between;
 
     min-width: 24.5188rem;
+    min-height: 43.4956rem;
     padding: 2.5rem;
-    border-radius: 2.5rem;
+    border-radius: 4rem;
     white-space: nowrap;
     background: var(--bright-background);
+}
+
+#top-nav {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+#time-refresh-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+
+    min-width: 85px;
+    min-height: 44px;
+    padding: 0.5rem;
+    margin-bottom: 1.5rem;
+    border-radius: 2rem;
+    background-color: #50a1df;
+    cursor: pointer;
+}
+
+#time-refresh-container:active {
+    background-color: #7bbdf0;
+}
+
+#refreshing-icon {
+    display: none;
+}
+
+#skeleton-weather-icon {
+    width: 240px;
+    height: 240px;
 }
 
 .weather-icon {
@@ -142,9 +181,4 @@ main {
     main {
         background: var(--dark-background);
     }
-} */
-
-/* When screensize ... resize fontsize */
-/* @media screen (min-width: "") {
-    
 } */

@@ -1,4 +1,9 @@
+const timeRefreshContainerElement = document.getElementById('time-refresh-container');
+const timeElement = document.getElementById('time');
+const refreshElement = document.getElementById('refresh-icon');
+const refreshingElement = document.getElementById('refreshing-icon');
 const cityElement = document.getElementById('city-name');
+const skeletonWeatherIconElement = document.getElementById('skeleton-weather-icon');
 const tempElement = document.getElementById('temperature');
 const descriptionElement = document.getElementById('weather-description');
 const windElement = document.getElementById('wind-val');
@@ -6,6 +11,21 @@ const humidityElement = document.getElementById('humidity-val');
 const feelsLikeElement = document.getElementById('feels-like-val');
 
 const API_KEY = '6789d5a6b5cb0ce6f47e021e1fafbf6e';
+
+const refresh = () => {
+    refreshElement.style.display = 'none';
+    refreshingElement.style.display = 'inline';
+
+    setTimeout(() => {
+        timeElement.textContent = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', hour12: false});
+
+        fetchWeatherData('Osaka');
+
+        refreshingElement.style.display = 'none';
+        refreshElement.style.display = 'inline';
+        skeletonWeatherIconElement.style.display = 'none';
+    }, 2000);
+}
 
 const toTitleCase = (str) => {
 return str.replace(/\w\S*/g, (txt) => {
@@ -57,4 +77,6 @@ const fetchWeatherData = (city) => {
     });
 }
 
-fetchWeatherData('Osaka');
+timeRefreshContainerElement.addEventListener('click', refresh);
+
+refresh();
