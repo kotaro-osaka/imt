@@ -12,6 +12,7 @@ Wetterinformationen werden mithilfe der [OpenWeather API](https://openweathermap
     - Light & Dark Modus
     - Kelvin // Celsius // Fahrenheit
     - `v2.1` Standorterkennung Option
+    - `v2.2` Deutsch // English Sprachen Option
 
 ### Ressourcen
 - [Poppins Google Font](https://fonts.google.com/specimen/Poppins?query=poppins)
