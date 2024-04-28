@@ -1,7 +1,14 @@
+const weatherContainer = document.getElementById('weather-container');
+const settingsContainer = document.getElementById('settings-container');
+
 const timeRefreshContainerElement = document.getElementById('time-refresh-container');
 const timeElement = document.getElementById('time');
 const refreshElement = document.getElementById('refresh-icon');
 const refreshingElement = document.getElementById('refreshing-icon');
+
+const open_settings_icon = document.getElementById('open-settings-icon');
+const close_settings_icon = document.getElementById('close-settings-icon');
+
 const cityElement = document.getElementById('city-name');
 const skeletonWeatherIconElement = document.getElementById('skeleton-weather-icon');
 const tempElement = document.getElementById('temperature');
@@ -19,18 +26,30 @@ const refresh = () => {
     setTimeout(() => {
         timeElement.textContent = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', hour12: false});
 
-        fetchWeatherData('Osaka');
+        // fetchWeatherData('Osaka');
 
         refreshingElement.style.display = 'none';
         refreshElement.style.display = 'inline';
-        skeletonWeatherIconElement.style.display = 'none';
+        // skeletonWeatherIconElement.style.display = 'none';
     }, 2000);
 }
 
+const openSettings = () => {
+    weatherContainer.style.display = 'none';
+    settingsContainer.style.display = 'flex';
+}
+
+const closeSettings = () => {
+    settingsContainer.style.display = 'none';
+    weatherContainer.style.display = 'flex';
+
+    refresh();
+}
+
 const toTitleCase = (str) => {
-return str.replace(/\w\S*/g, (txt) => {
-    return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-});
+    return str.replace(/\w\S*/g, (txt) => {
+        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+    });
 }
 
 const fetchWeatherData = (city) => {
@@ -79,5 +98,9 @@ const fetchWeatherData = (city) => {
 }
 
 timeRefreshContainerElement.addEventListener('click', refresh);
+
+open_settings_icon.addEventListener('click', openSettings);
+close_settings_icon.addEventListener('click', closeSettings);
+
 
 refresh();

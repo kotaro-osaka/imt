@@ -79,7 +79,7 @@ body {
 }
 
 main {
-    display: flex;
+    display: none;
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
@@ -124,7 +124,7 @@ main {
     display: none;
 }
 
-#settings-icon {
+#open-settings-icon {
     min-width: 44px;
     min-height: 44px;
 }
@@ -139,8 +139,6 @@ main {
     width: 15rem;
     height: auto;
 }
-
-/* #icon-10d { display: inline; } */
 
 #temperature-description-container {
     display: flex;
@@ -189,6 +187,39 @@ main {
 #humidity-unit {
     font-weight: 200;
 }
+
+
+/* Settings */
+
+#settings-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+
+    min-width: 24.5188rem;
+    min-height: 43.4956rem;
+    padding: 2.5rem;
+    border-radius: 4rem;
+    white-space: nowrap;
+    background-color: white;
+}
+
+#settings-header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding-bottom: 5px;
+    color: #242424;
+    border-bottom: 2px solid #F0F0F0;
+}
+
+#close-settings-icon {
+    cursor: pointer;
+}
+
 
 /* Media queries */
 
