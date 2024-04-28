@@ -53,7 +53,7 @@ const fetchWeatherData = (city) => {
         console.log(weatherIcon);
         document.getElementById(weatherIcon).style.display = 'inline';
 
-        console.log(data.weather.icon);
+        console.log(data.weather[0].icon);
 
         tempElement.innerHTML = '';
         tempElement.innerHTML += `${temperature}<sup>°C</sup></sup>`;
@@ -74,6 +74,7 @@ const fetchWeatherData = (city) => {
     })
     .catch(err => {
         console.error('Error fetching weather data:', err);
+        document.getElementById('skeleton-weather-icon').style.display = 'block';
     });
 }
 
