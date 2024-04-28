@@ -71,6 +71,7 @@ body {
     flex-wrap: nowrap;
 
     padding: 5rem;
+    background-color: aliceblue;
 }
 
 .skeleton-ui {
