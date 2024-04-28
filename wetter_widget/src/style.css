@@ -4,6 +4,10 @@
 :root {
     --bright-background: linear-gradient(0deg, #80BBE9 0%, #3A80FF 100%);
     --dark-background: linear-gradient(0deg, #383C47 0%, #1e1e2b 100%);
+    --accent: #3A80FF;
+    --black: #242424;
+    --container: #F0F0F0;
+    --container-on-container: #F9F9F9;
 }
 
 /* Reset */
@@ -71,7 +75,7 @@ body {
     flex-wrap: nowrap;
 
     padding: 5rem;
-    background-color: aliceblue;
+    background-color: slategrey;
 }
 
 .skeleton-ui {
@@ -79,7 +83,7 @@ body {
 }
 
 main {
-    display: none;
+    display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
@@ -212,11 +216,15 @@ main {
     justify-content: space-between;
 
     padding-bottom: 5px;
-    color: #242424;
-    border-bottom: 2px solid #F0F0F0;
+    color: var(--black);
+    border-bottom: 2px solid var(--container);
 }
 
 #close-settings-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
     cursor: pointer;
 }
 
