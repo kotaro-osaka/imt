@@ -26,11 +26,11 @@ const refresh = () => {
     setTimeout(() => {
         timeElement.textContent = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', hour12: false});
 
-        fetchWeatherData('Osaka');
+        // fetchWeatherData('Osaka');
 
         refreshingElement.style.display = 'none';
         refreshElement.style.display = 'inline';
-        skeletonWeatherIconElement.style.display = 'none';
+        // skeletonWeatherIconElement.style.display = 'none';
     }, 2000);
 }
 
