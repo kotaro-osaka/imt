@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wetter Widget</title>
+</head>
+<body>
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Poppins:700|Poppins:400');
+
+        /* Variables */
+        :root {
+            --bright-background: linear-gradient(0deg, #80BBE9 0%, #3A80FF 100%);
+            --dark-background: linear-gradient(0deg, #383C47 0%, #1e1e2b 100%);
+            --accent: #3A80FF;
+            --black: #242424;
+            --container: #F0F0F0;
+            --container-on-container: #F9F9F9;
+        }
+
+        /* Reset */
+        *,
+        *::after,
+        *::before {
+            border: 0;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        input,
+        textarea,
+        button {
+            font-family: inherit;
+            font-size: inherit;
+            color: inherit;
+            background: none;
+            -webkit-appearance: none;
+            appearance: none;
+            -moz-appearance: none;
+            border-radius: 0%;
+            -webkit-border-radius: 0;
+        }
+
+        /* Fonts */
+        body {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 400;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.01);
+            color: white;
+        }
+
+        h1, h2, h3, h4 {
+        font-family: 'Poppins', sans-serif;
+        font-weight: 700;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        html {font-size: 100%;} /* 16px */
+
+        h1 {font-size: 3.366rem; /* 53.92px */}
+        h2 {font-size: 2.525rem; /* 40.32px */}
+        h3 {font-size: 1.894rem; /* 30.24px */}
+        h4 {font-size: 1.421rem; /* 22.72px */}
+        h5 {
+            font-size: 1.066rem; /* 17.12px */
+            font-weight: 600;
+        }
+
+        small {font-size: 0.600rem; /* 9.6px */}
+        sup {
+            font-weight: 350;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        html { font-size: 100%; }
+
+
+        /* Main Styles */
+        body {
+            display: flex;
+            justify-content: center;
+            flex-wrap: nowrap;
+
+            padding: 5rem;
+            background-color: slategrey;
+        }
+
+        .skeleton-ui {
+            visibility: hidden;
+        }
+
+        main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+
+            min-width: 24.5188rem;
+            min-height: 43.4956rem;
+            padding: 2.5rem;
+            border-radius: 4rem;
+            white-space: nowrap;
+            background: var(--bright-background);
+        }
+
+        #top-nav {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-bottom: 1.5rem;
+        }
+
+        .top-nav-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+
+            min-height: 44px;
+            padding: 0.5rem;
+            border-radius: 2rem;
+            background-color: #50a1df;
+            cursor: pointer;
+        }
+
+        .top-nav-item:active {
+            background-color: #7bbdf0;
+        }
+
+        #time-refresh-container {
+            min-width: 85px;
+        }
+
+        #refreshing-icon {
+            display: none;
+        }
+
+        #open-settings-icon {
+            min-width: 44px;
+            min-height: 44px;
+        }
+
+        #skeleton-weather-icon {
+            width: 240px;
+            height: 240px;
+        }
+
+        .weather-icon {
+            display: none;
+            width: 15rem;
+            height: auto;
+        }
+
+        #temperature-description-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #temp-unit-container {
+            display: flex;
+            padding-left: 2rem;
+        }
+
+        #temperature sup { opacity: 75%; }
+
+        #weather-description {
+            text-align: center;
+            white-space: wrap;
+            opacity: 95%;
+        }
+
+        #details-container {
+            display: flex;
+            justify-content: space-around;
+            gap: 2rem;
+
+            margin-top: 2.5rem;
+        }
+
+        .details-value-unit-container { padding-left: 15%; }
+
+        .details-item {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: .5rem;
+        }
+
+        .details-unit { opacity: 60%; }
+
+        #wind-unit { 
+            font-size: 1rem;
+            font-weight: 200;
+        }
+
+        #humidity-unit {
+            font-weight: 200;
+        }
+
+
+        /* Settings */
+
+        #settings-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+
+            width: 24.5188rem;
+            height: 43.4956rem;
+            padding: 2.5rem;
+            border-radius: 4rem;
+            white-space: nowrap;
+            background-color: white;
+        }
+
+        #settings-container h5 {
+            color: var(--black);
+        }
+
+        #settings-header {
+            width: 100%;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+
+            padding-bottom: 5px;
+            color: var(--black);
+            border-bottom: 2px solid var(--container);
+        }
+
+        #close-settings-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        #settings-body {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            gap: 15px;
+
+            padding: 15px 0;
+        }
+
+        .settings-body-item {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+
+            padding: 15px 10px;
+            border-radius: 16px;
+            background-color: var(--container-on-container);
+        }
+
+        .settings-body-item header {
+            width: 100%;
+            display: flex;
+            justify-content: flex-start;
+            gap: 10px;
+
+            margin-bottom: 5px;
+        }
+
+        .double-button-container {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 5px;
+            border-radius: 16px;
+            background-color: var(--container);
+        }
+
+        .selected-double-button {
+            width: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 10px;
+            border-radius: 16px;
+            color: var(--accent);
+            background-color: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .unselected-double-button {
+            width: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 10px;
+            border-radius: 16px;
+            color: var(--black);
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .tripple-button-container {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 5px;
+            border-radius: 16px;
+            background-color: var(--container);
+        }
+
+        .selected-tripple-button {
+            width: calc(100/3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 10px;
+            border-radius: 16px;
+            color: var(--accent);
+            background-color: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .unselected-tripple-button {
+            width: calc(100/3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 10px;
+            border-radius: 16px;
+            color: var(--black);
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .edit-button-container {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 5px;
+            border-radius: 16px;
+            color: var(--black);
+            background-color: var(--container);
+        }
+
+        #time-format-header {
+            margin: 5px -5px 0;
+        }
+
+        #theme-button-container button {
+            min-width: 90px;
+        }
+
+
+
+
+        /* Media queries */
+
+        /* Auto adjust widget background color to device preference */
+        /* @media (prefers-color-scheme: dark) {
+            main {
+                background: var(--dark-background);
+            }
+        } */
+    </style>
+
+    <main id="weather-container">
+        <header id="top-nav">
+            <div class="top-nav-item" id="time-refresh-container">
+                <p id="time">N/A</p>
+                <svg id="refresh-icon" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z" fill="white"/></svg>
+                <svg id="refreshing-icon" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><style>.spinner_P7sC{transform-origin:center;animation:spinner_svv2 .75s infinite linear}@keyframes spinner_svv2{100%{transform:rotate(360deg)}}</style><path d="M10.14,1.16a11,11,0,0,0-9,8.92A1.59,1.59,0,0,0,2.46,12,1.52,1.52,0,0,0,4.11,10.7a8,8,0,0,1,6.66-6.61A1.42,1.42,0,0,0,12,2.69h0A1.57,1.57,0,0,0,10.14,1.16Z" class="spinner_P7sC" fill="white"/></svg>
+            </div>
+            <svg class="top-nav-item" id="open-settings-icon" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M160-240q-17 0-28.5-11.5T120-280q0-17 11.5-28.5T160-320h640q17 0 28.5 11.5T840-280q0 17-11.5 28.5T800-240H160Zm0-200q-17 0-28.5-11.5T120-480q0-17 11.5-28.5T160-520h640q17 0 28.5 11.5T840-480q0 17-11.5 28.5T800-440H160Zm0-200q-17 0-28.5-11.5T120-680q0-17 11.5-28.5T160-720h640q17 0 28.5 11.5T840-680q0 17-11.5 28.5T800-640H160Z" fill="white"/></svg>
+        </header>
+        <header><h2 id="city-name">N/A</h2></header>
+        <div class="skeleton-ui" id="skeleton-weather-icon"></div>
+        <svg class="weather-icon" id="icon-01d" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><defs><linearGradient id="a-01d" x1="26.75" x2="37.25" y1="22.91" y2="41.09" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fbbf24"/><stop offset=".45" stop-color="#fbbf24"/><stop offset="1" stop-color="#f59e0b"/></linearGradient></defs><circle cx="32" cy="32" r="10.5" fill="url(#a-01d)" stroke="#f8af18" stroke-miterlimit="10" stroke-width=".5"/><path fill="none" stroke="#fbbf24" stroke-linecap="round" stroke-miterlimit="10" stroke-width="3" d="M32 15.71V9.5m0 45v-6.21m11.52-27.81l4.39-4.39M16.09 47.91l4.39-4.39m0-23l-4.39-4.39m31.82 31.78l-4.39-4.39M15.71 32H9.5m45 0h-6.21"><animateTransform attributeName="transform" dur="45s" repeatCount="indefinite" type="rotate" values="0 32 32; 360 32 32"/></path></svg>            
+        <svg class="weather-icon" id="icon-01n" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><defs><linearGradient id="a-01n" x1="21.92" x2="38.52" y1="18.75" y2="47.52" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#86c3db"/><stop offset=".45" stop-color="#86c3db"/><stop offset="1" stop-color="#5eafcf"/><animateTransform attributeName="gradientTransform" dur="10s" repeatCount="indefinite" type="rotate" values="5 32 32; -15 32 32; 5 32 32"/></linearGradient></defs><path fill="url(#a-01n)" stroke="#72b9d5" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5" d="M46.66 36.2a16.66 16.66 0 01-16.78-16.55 16.29 16.29 0 01.55-4.15A16.56 16.56 0 1048.5 36.1c-.61.06-1.22.1-1.84.1z"><animateTransform attributeName="transform" dur="10s" repeatCount="indefinite" type="rotate" values="-5 32 32; 15 32 32; -5 32 32"/></path></svg>
+        <svg class="weather-icon" id="icon-02d" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><defs><linearGradient id="a-02d" x1="16.5" x2="21.5" y1="19.67" y2="28.33" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fbbf24"/><stop offset=".45" stop-color="#fbbf24"/><stop offset="1" stop-color="#f59e0b"/></linearGradient><linearGradient id="b" x1="22.56" x2="39.2" y1="21.96" y2="50.8" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#f3f7fe"/><stop offset=".45" stop-color="#f3f7fe"/><stop offset="1" stop-color="#deeafb"/></linearGradient></defs><circle cx="19" cy="24" r="5" fill="url(#a-02d)" stroke="#f8af18" stroke-miterlimit="10" stroke-width=".5"/><path fill="none" stroke="#fbbf24" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M19 15.67V12.5m0 23v-3.17m5.89-14.22l2.24-2.24M10.87 32.13l2.24-2.24m0-11.78l-2.24-2.24m16.26 16.26l-2.24-2.24M7.5 24h3.17m19.83 0h-3.17"><animateTransform attributeName="transform" dur="45s" repeatCount="indefinite" type="rotate" values="0 19 24; 360 19 24"/></path><path fill="url(#b)" stroke="#e6effc" stroke-miterlimit="10" stroke-width=".5" d="M46.5 31.5h-.32a10.49 10.49 0 00-19.11-8 7 7 0 00-10.57 6 7.21 7.21 0 00.1 1.14A7.5 7.5 0 0018 45.5a4.19 4.19 0 00.5 0v0h28a7 7 0 000-14z"/></svg>
+        <svg class="weather-icon" id="icon-02n" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><defs><linearGradient id="a-02n" x1="13.58" x2="24.15" y1="15.57" y2="33.87" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#86c3db"/><stop offset=".45" stop-color="#86c3db"/><stop offset="1" stop-color="#5eafcf"/><animateTransform attributeName="gradientTransform" dur="10s" repeatCount="indefinite" type="rotate" values="10 19.22 24.293; -10 19.22 24.293; 10 19.22 24.293"/></linearGradient><linearGradient id="b" x1="22.56" x2="39.2" y1="21.96" y2="50.8" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#f3f7fe"/><stop offset=".45" stop-color="#f3f7fe"/><stop offset="1" stop-color="#deeafb"/></linearGradient></defs><path fill="url(#a-02n)" stroke="#72b9d5" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5" d="M29.33 26.68a10.61 10.61 0 01-10.68-10.54A10.5 10.5 0 0119 13.5a10.54 10.54 0 1011.5 13.11 11.48 11.48 0 01-1.17.07z"><animateTransform attributeName="transform" dur="10s" repeatCount="indefinite" type="rotate" values="-10 19.22 24.293; 10 19.22 24.293; -10 19.22 24.293"/></path><path fill="url(#b)" stroke="#e6effc" stroke-miterlimit="10" stroke-width=".5" d="M46.5 31.5h-.32a10.49 10.49 0 00-19.11-8 7 7 0 00-10.57 6 7.21 7.21 0 00.1 1.14A7.5 7.5 0 0018 45.5a4.19 4.19 0 00.5 0v0h28a7 7 0 000-14z"/></svg>
+        <svg class="weather-icon" id="icon-03d" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><defs><linearGradient id="a-03d" x1="22.56" x2="39.2" y1="21.96" y2="50.8" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#f3f7fe"/><stop offset=".45" stop-color="#f3f7fe"/><stop offset="1" stop-color="#deeafb"/></linearGradient></defs><path fill="url(#a-03d)" stroke="#e6effc" stroke-miterlimit="10" stroke-width=".5" d="M46.5 31.5h-.32a10.49 10.49 0 00-19.11-8 7 7 0 00-10.57 6 7.21 7.21 0 00.1 1.14A7.5 7.5 0 0018 45.5a4.19 4.19 0 00.5 0v0h28a7 7 0 000-14z"><animateTransform attributeName="transform" dur="7s" repeatCount="indefinite" type="translate" values="-3 0; 3 0; -3 0"/></path></svg>
+        <svg class="weather-icon" id="icon-03n" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><defs><linearGradient id="a-03n" x1="22.56" x2="39.2" y1="21.96" y2="50.8" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#f3f7fe"/><stop offset=".45" stop-color="#f3f7fe"/><stop offset="1" stop-color="#deeafb"/></linearGradient></defs><path fill="url(#a-03n)" stroke="#e6effc" stroke-miterlimit="10" stroke-width=".5" d="M46.5 31.5h-.32a10.49 10.49 0 00-19.11-8 7 7 0 00-10.57 6 7.21 7.21 0 00.1 1.14A7.5 7.5 0 0018 45.5a4.19 4.19 0 00.5 0v0h28a7 7 0 000-14z"><animateTransform attributeName="transform" dur="7s" repeatCount="indefinite" type="translate" values="-3 0; 3 0; -3 0"/></path></svg>
+        <svg class="weather-icon" id="icon-04d" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><defs><linearGradient id="a-04d" x1="22.56" x2="39.2" y1="21.96" y2="50.8" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#f3f7fe"/><stop offset=".45" stop-color="#f3f7fe"/><stop offset="1" stop-color="#deeafb"/></linearGradient></defs><path fill="url(#a-04d)" stroke="#e6effc" stroke-miterlimit="10" stroke-width=".5" d="M46.5 31.5h-.32a10.49 10.49 0 00-19.11-8 7 7 0 00-10.57 6 7.21 7.21 0 00.1 1.14A7.5 7.5 0 0018 45.5a4.19 4.19 0 00.5 0v0h28a7 7 0 000-14z"><animateTransform attributeName="transform" dur="7s" repeatCount="indefinite" type="translate" values="-3 0; 3 0; -3 0"/></path></svg>
+        <svg class="weather-icon" id="icon-04n" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><defs><linearGradient id="a-04n" x1="22.56" x2="39.2" y1="21.96" y2="50.8" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#f3f7fe"/><stop offset=".45" stop-color="#f3f7fe"/><stop offset="1" stop-color="#deeafb"/></linearGradient></defs><path fill="url(#a-04n)" stroke="#e6effc" stroke-miterlimit="10" stroke-width=".5" d="M46.5 31.5h-.32a10.49 10.49 0 00-19.11-8 7 7 0 00-10.57 6 7.21 7.21 0 00.1 1.14A7.5 7.5 0 0018 45.5a4.19 4.19 0 00.5 0v0h28a7 7 0 000-14z"><animateTransform attributeName="transform" dur="7s" repeatCount="indefinite" type="translate" values="-3 0; 3 0; -3 0"/></path></svg>
+        <svg class="weather-icon" id="icon-09d" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 64 64"><defs><linearGradient id="b-09d" x1="22.56" x2="39.2" y1="21.96" y2="50.8" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#f3f7fe"/><stop offset=".45" stop-color="#f3f7fe"/><stop offset="1" stop-color="#deeafb"/></linearGradient><linearGradient id="a-09d" x1="22.53" x2="25.47" y1="42.95" y2="48.05" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#4286ee"/><stop offset=".45" stop-color="#4286ee"/><stop offset="1" stop-color="#0950bc"/></linearGradient><linearGradient id="c-09d" x1="29.53" x2="32.47" y1="42.95" y2="48.05" xlink:href="#a-09d"/><linearGradient id="d-09d" x1="36.53" x2="39.47" y1="42.95" y2="48.05" xlink:href="#a-09d"/></defs><path fill="url(#b-09d)" stroke="#e6effc" stroke-miterlimit="10" stroke-width=".5" d="M46.5 31.5h-.32a10.49 10.49 0 00-19.11-8 7 7 0 00-10.57 6 7.21 7.21 0 00.1 1.14A7.5 7.5 0 0018 45.5a4.19 4.19 0 00.5 0v0h28a7 7 0 000-14z"/><path fill="none" stroke="url(#a-09d)" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M24.39 43.03l-.78 4.94"><animateTransform attributeName="transform" dur="0.7s" repeatCount="indefinite" type="translate" values="1 -5; -2 10"/><animate attributeName="opacity" dur="0.7s" repeatCount="indefinite" values="0;1;1;0"/></path><path fill="none" stroke="url(#c-09d)" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M31.39 43.03l-.78 4.94"><animateTransform attributeName="transform" begin="-0.4s" dur="0.7s" repeatCount="indefinite" type="translate" values="1 -5; -2 10"/><animate attributeName="opacity" begin="-0.4s" dur="0.7s" repeatCount="indefinite" values="0;1;1;0"/></path><path fill="none" stroke="url(#d-09d)" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M38.39 43.03l-.78 4.94"><animateTransform attributeName="transform" begin="-0.2s" dur="0.7s" repeatCount="indefinite" type="translate" values="1 -5; -2 10"/><animate attributeName="opacity" begin="-0.2s" dur="0.7s" repeatCount="indefinite" values="0;1;1;0"/></path></svg>
+        <svg class="weather-icon" id="icon-09n" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 64 64"><defs><linearGradient id="b-09n" x1="22.56" x2="39.2" y1="21.96" y2="50.8" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#f3f7fe"/><stop offset=".45" stop-color="#f3f7fe"/><stop offset="1" stop-color="#deeafb"/></linearGradient><linearGradient id="a-09n" x1="22.53" x2="25.47" y1="42.95" y2="48.05" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#4286ee"/><stop offset=".45" stop-color="#4286ee"/><stop offset="1" stop-color="#0950bc"/></linearGradient><linearGradient id="c-09n" x1="29.53" x2="32.47" y1="42.95" y2="48.05" xlink:href="#a-09n"/><linearGradient id="d-09n" x1="36.53" x2="39.47" y1="42.95" y2="48.05" xlink:href="#a-09n"/></defs><path fill="url(#b-09n)" stroke="#e6effc" stroke-miterlimit="10" stroke-width=".5" d="M46.5 31.5h-.32a10.49 10.49 0 00-19.11-8 7 7 0 00-10.57 6 7.21 7.21 0 00.1 1.14A7.5 7.5 0 0018 45.5a4.19 4.19 0 00.5 0v0h28a7 7 0 000-14z"/><path fill="none" stroke="url(#a-09n)" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M24.39 43.03l-.78 4.94"><animateTransform attributeName="transform" dur="0.7s" repeatCount="indefinite" type="translate" values="1 -5; -2 10"/><animate attributeName="opacity" dur="0.7s" repeatCount="indefinite" values="0;1;1;0"/></path><path fill="none" stroke="url(#c-09n)" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M31.39 43.03l-.78 4.94"><animateTransform attributeName="transform" begin="-0.4s" dur="0.7s" repeatCount="indefinite" type="translate" values="1 -5; -2 10"/><animate attributeName="opacity" begin="-0.4s" dur="0.7s" repeatCount="indefinite" values="0;1;1;0"/></path><path fill="none" stroke="url(#d-09n)" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M38.39 43.03l-.78 4.94"><animateTransform attributeName="transform" begin="-0.2s" dur="0.7s" repeatCount="indefinite" type="translate" values="1 -5; -2 10"/><animate attributeName="opacity" begin="-0.2s" dur="0.7s" repeatCount="indefinite" values="0;1;1;0"/></path></svg>
+        <svg class="weather-icon" id="icon-10d" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 64 64"><defs><linearGradient id="b-10d" x1="16.5" x2="21.5" y1="19.67" y2="28.33" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fbbf24"/><stop offset=".45" stop-color="#fbbf24"/><stop offset="1" stop-color="#f59e0b"/></linearGradient><linearGradient id="c-10d" x1="22.56" x2="39.2" y1="21.96" y2="50.8" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#f3f7fe"/><stop offset=".45" stop-color="#f3f7fe"/><stop offset="1" stop-color="#deeafb"/></linearGradient><linearGradient id="a-10d" x1="22.53" x2="25.47" y1="42.95" y2="48.05" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#4286ee"/><stop offset=".45" stop-color="#4286ee"/><stop offset="1" stop-color="#0950bc"/></linearGradient><linearGradient id="d-10d" x1="29.53" x2="32.47" y1="42.95" y2="48.05" xlink:href="#a-10d"/><linearGradient id="e-10d" x1="36.53" x2="39.47" y1="42.95" y2="48.05" xlink:href="#a-10d"/></defs><circle cx="19" cy="24" r="5" fill="url(#b-10d)" stroke="#f8af18" stroke-miterlimit="10" stroke-width=".5"/><path fill="none" stroke="#fbbf24" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M19 15.67V12.5m0 23v-3.17m5.89-14.22l2.24-2.24M10.87 32.13l2.24-2.24m0-11.78l-2.24-2.24m16.26 16.26l-2.24-2.24M7.5 24h3.17m19.83 0h-3.17"><animateTransform attributeName="transform" dur="45s" repeatCount="indefinite" type="rotate" values="0 19 24; 360 19 24"/></path><path fill="url(#c-10d)" stroke="#e6effc" stroke-miterlimit="10" stroke-width=".5" d="M46.5 31.5h-.32a10.49 10.49 0 00-19.11-8 7 7 0 00-10.57 6 7.21 7.21 0 00.1 1.14A7.5 7.5 0 0018 45.5a4.19 4.19 0 00.5 0v0h28a7 7 0 000-14z"/><path fill="none" stroke="url(#a-10d)" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M24.39 43.03l-.78 4.94"><animateTransform attributeName="transform" dur="0.7s" repeatCount="indefinite" type="translate" values="1 -5; -2 10"/><animate attributeName="opacity" dur="0.7s" repeatCount="indefinite" values="0;1;1;0"/></path><path fill="none" stroke="url(#d-10d)" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M31.39 43.03l-.78 4.94"><animateTransform attributeName="transform" begin="-0.4s" dur="0.7s" repeatCount="indefinite" type="translate" values="1 -5; -2 10"/><animate attributeName="opacity" begin="-0.4s" dur="0.7s" repeatCount="indefinite" values="0;1;1;0"/></path><path fill="none" stroke="url(#e-10d)" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M38.39 43.03l-.78 4.94"><animateTransform attributeName="transform" begin="-0.2s" dur="0.7s" repeatCount="indefinite" type="translate" values="1 -5; -2 10"/><animate attributeName="opacity" begin="-0.2s" dur="0.7s" repeatCount="indefinite" values="0;1;1;0"/></path></svg>
+        <svg class="weather-icon" id="icon-10n" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 64 64"><defs><linearGradient id="b-10n" x1="13.58" x2="24.15" y1="15.57" y2="33.87" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#86c3db"/><stop offset=".45" stop-color="#86c3db"/><stop offset="1" stop-color="#5eafcf"/><animateTransform attributeName="gradientTransform" dur="10s" repeatCount="indefinite" type="rotate" values="10 19.22 24.293; -10 19.22 24.293; 10 19.22 24.293"/></linearGradient><linearGradient id="c-10n" x1="22.56" x2="39.2" y1="21.96" y2="50.8" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#f3f7fe"/><stop offset=".45" stop-color="#f3f7fe"/><stop offset="1" stop-color="#deeafb"/></linearGradient><linearGradient id="a-10n" x1="22.53" x2="25.47" y1="42.95" y2="48.05" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#4286ee"/><stop offset=".45" stop-color="#4286ee"/><stop offset="1" stop-color="#0950bc"/></linearGradient><linearGradient id="d-10n" x1="29.53" x2="32.47" y1="42.95" y2="48.05" xlink:href="#a-10n"/><linearGradient id="e" x1="36.53" x2="39.47" y1="42.95" y2="48.05" xlink:href="#a-10n"/></defs><path fill="url(#b-10n)" stroke="#72b9d5" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5" d="M29.33 26.68a10.61 10.61 0 01-10.68-10.54A10.5 10.5 0 0119 13.5a10.54 10.54 0 1011.5 13.11 11.48 11.48 0 01-1.17.07z"><animateTransform attributeName="transform" dur="10s" repeatCount="indefinite" type="rotate" values="-10 19.22 24.293; 10 19.22 24.293; -10 19.22 24.293"/></path><path fill="url(#c-10n)" stroke="#e6effc" stroke-miterlimit="10" stroke-width=".5" d="M46.5 31.5h-.32a10.49 10.49 0 00-19.11-8 7 7 0 00-10.57 6 7.21 7.21 0 00.1 1.14A7.5 7.5 0 0018 45.5a4.19 4.19 0 00.5 0v0h28a7 7 0 000-14z"/><path fill="none" stroke="url(#a-10n)" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M24.39 43.03l-.78 4.94"><animateTransform attributeName="transform" dur="0.7s" repeatCount="indefinite" type="translate" values="1 -5; -2 10"/><animate attributeName="opacity" dur="0.7s" repeatCount="indefinite" values="0;1;1;0"/></path><path fill="none" stroke="url(#d-10n)" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M31.39 43.03l-.78 4.94"><animateTransform attributeName="transform" begin="-0.4s" dur="0.7s" repeatCount="indefinite" type="translate" values="1 -5; -2 10"/><animate attributeName="opacity" begin="-0.4s" dur="0.7s" repeatCount="indefinite" values="0;1;1;0"/></path><path fill="none" stroke="url(#e-10n)" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M38.39 43.03l-.78 4.94"><animateTransform attributeName="transform" begin="-0.2s" dur="0.7s" repeatCount="indefinite" type="translate" values="1 -5; -2 10"/><animate attributeName="opacity" begin="-0.2s" dur="0.7s" repeatCount="indefinite" values="0;1;1;0"/></path></svg>
+        <svg class="weather-icon" id="icon-11d" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><defs><linearGradient id="a-11d" x1="22.56" x2="39.2" y1="21.96" y2="50.8" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#f3f7fe"/><stop offset=".45" stop-color="#f3f7fe"/><stop offset="1" stop-color="#deeafb"/></linearGradient><linearGradient id="b-11d" x1="26.74" x2="35.76" y1="37.88" y2="53.52" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#f7b23b"/><stop offset=".45" stop-color="#f7b23b"/><stop offset="1" stop-color="#f59e0b"/></linearGradient></defs><path fill="url(#a-11d)" stroke="#e6effc" stroke-miterlimit="10" stroke-width=".5" d="M46.5 31.5h-.32a10.49 10.49 0 00-19.11-8 7 7 0 00-10.57 6 7.21 7.21 0 00.1 1.14A7.5 7.5 0 0018 45.5a4.19 4.19 0 00.5 0v0h28a7 7 0 000-14z"/><path fill="url(#b-11d)" stroke="#f6a823" stroke-miterlimit="10" stroke-width=".5" d="M30 36l-4 12h4l-2 10 10-14h-6l4-8h-6z"><animate attributeName="opacity" dur="2s" repeatCount="indefinite" values="1; 1; 1; 1; 1; 1; 0.1; 1; 0.1; 1; 1; 0.1; 1; 0.1; 1"/></path></svg>
+        <svg class="weather-icon" id="icon-11n" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><defs><linearGradient id="a-11n" x1="22.56" x2="39.2" y1="21.96" y2="50.8" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#f3f7fe"/><stop offset=".45" stop-color="#f3f7fe"/><stop offset="1" stop-color="#deeafb"/></linearGradient><linearGradient id="b-11n" x1="26.74" x2="35.76" y1="37.88" y2="53.52" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#f7b23b"/><stop offset=".45" stop-color="#f7b23b"/><stop offset="1" stop-color="#f59e0b"/></linearGradient></defs><path fill="url(#a-11n)" stroke="#e6effc" stroke-miterlimit="10" stroke-width=".5" d="M46.5 31.5h-.32a10.49 10.49 0 00-19.11-8 7 7 0 00-10.57 6 7.21 7.21 0 00.1 1.14A7.5 7.5 0 0018 45.5a4.19 4.19 0 00.5 0v0h28a7 7 0 000-14z"/><path fill="url(#b-11n)" stroke="#f6a823" stroke-miterlimit="10" stroke-width=".5" d="M30 36l-4 12h4l-2 10 10-14h-6l4-8h-6z"><animate attributeName="opacity" dur="2s" repeatCount="indefinite" values="1; 1; 1; 1; 1; 1; 0.1; 1; 0.1; 1; 1; 0.1; 1; 0.1; 1"/></path></svg>
+        <svg class="weather-icon" id="icon-13d" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 64 64"><defs><linearGradient id="b-13d" x1="16.5" x2="21.5" y1="19.67" y2="28.33" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fbbf24"/><stop offset=".45" stop-color="#fbbf24"/><stop offset="1" stop-color="#f59e0b"/></linearGradient><linearGradient id="c-13d" x1="22.56" x2="39.2" y1="21.96" y2="50.8" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#f3f7fe"/><stop offset=".45" stop-color="#f3f7fe"/><stop offset="1" stop-color="#deeafb"/></linearGradient><linearGradient id="a-13d" x1="30.12" x2="31.88" y1="43.48" y2="46.52" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#86c3db"/><stop offset=".45" stop-color="#86c3db"/><stop offset="1" stop-color="#5eafcf"/></linearGradient><linearGradient id="d-13d" x1="29.67" x2="32.33" y1="42.69" y2="47.31" xlink:href="#a-13d"/><linearGradient id="e-13d" x1="23.12" x2="24.88" y1="43.48" y2="46.52" xlink:href="#a-13d"/><linearGradient id="f-13d" x1="22.67" x2="25.33" y1="42.69" y2="47.31" xlink:href="#a-13d"/><linearGradient id="g-13d" x1="37.12" x2="38.88" y1="43.48" y2="46.52" xlink:href="#a-13d"/><linearGradient id="h-13d" x1="36.67" x2="39.33" y1="42.69" y2="47.31" xlink:href="#a-13d"/></defs><circle cx="19" cy="24" r="5" fill="url(#b-13d)" stroke="#f8af18" stroke-miterlimit="10" stroke-width=".5"/><path fill="none" stroke="#fbbf24" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M19 15.67V12.5m0 23v-3.17m5.89-14.22l2.24-2.24M10.87 32.13l2.24-2.24m0-11.78l-2.24-2.24m16.26 16.26l-2.24-2.24M7.5 24h3.17m19.83 0h-3.17"><animateTransform attributeName="transform" dur="45s" repeatCount="indefinite" type="rotate" values="0 19 24; 360 19 24"/></path><path fill="url(#c-13d)" stroke="#e6effc" stroke-miterlimit="10" stroke-width=".5" d="M46.5 31.5h-.32a10.49 10.49 0 00-19.11-8 7 7 0 00-10.57 6 7.21 7.21 0 00.1 1.14A7.5 7.5 0 0018 45.5a4.19 4.19 0 00.5 0v0h28a7 7 0 000-14z"/><g><circle cx="31" cy="45" r="1.25" fill="none" stroke="url(#a-13d)" stroke-miterlimit="10"/><path fill="none" stroke="url(#d-13d)" stroke-linecap="round" stroke-miterlimit="10" d="M33.17 46.25l-1.09-.63m-2.16-1.24l-1.09-.63M31 42.5v1.25m0 3.75v-1.25m-1.08-.63l-1.09.63m4.34-2.5l-1.09.63"/><animateTransform additive="sum" attributeName="transform" dur="4s" repeatCount="indefinite" type="translate" values="-1 -6; 1 12"/><animateTransform additive="sum" attributeName="transform" dur="9s" repeatCount="indefinite" type="rotate" values="0 31 45; 360 31 45"/><animate attributeName="opacity" dur="4s" repeatCount="indefinite" values="0;1;1;1;0"/></g><g><circle cx="24" cy="45" r="1.25" fill="none" stroke="url(#e-13d)" stroke-miterlimit="10"/><path fill="none" stroke="url(#f-13d)" stroke-linecap="round" stroke-miterlimit="10" d="M26.17 46.25l-1.09-.63m-2.16-1.24l-1.09-.63M24 42.5v1.25m0 3.75v-1.25m-1.08-.63l-1.09.63m4.34-2.5l-1.09.63"/><animateTransform additive="sum" attributeName="transform" begin="-2s" dur="4s" repeatCount="indefinite" type="translate" values="1 -6; -1 12"/><animateTransform additive="sum" attributeName="transform" dur="9s" repeatCount="indefinite" type="rotate" values="0 24 45; 360 24 45"/><animate attributeName="opacity" begin="-2s" dur="4s" repeatCount="indefinite" values="0;1;1;1;0"/></g><g><circle cx="38" cy="45" r="1.25" fill="none" stroke="url(#g-13d)" stroke-miterlimit="10"/><path fill="none" stroke="url(#h-13d)" stroke-linecap="round" stroke-miterlimit="10" d="M40.17 46.25l-1.09-.63m-2.16-1.24l-1.09-.63M38 42.5v1.25m0 3.75v-1.25m-1.08-.63l-1.09.63m4.34-2.5l-1.09.63"/><animateTransform additive="sum" attributeName="transform" begin="-1s" dur="4s" repeatCount="indefinite" type="translate" values="1 -6; -1 12"/><animateTransform additive="sum" attributeName="transform" dur="9s" repeatCount="indefinite" type="rotate" values="0 38 45; 360 38 45"/><animate attributeName="opacity" begin="-1s" dur="4s" repeatCount="indefinite" values="0;1;1;1;0"/></g></svg>
+        <svg class="weather-icon" id="icon-13n" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 64 64"><defs><linearGradient id="b-13n" x1="16.5" x2="21.5" y1="19.67" y2="28.33" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fbbf24"/><stop offset=".45" stop-color="#fbbf24"/><stop offset="1" stop-color="#f59e0b"/></linearGradient><linearGradient id="c-13n" x1="22.56" x2="39.2" y1="21.96" y2="50.8" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#f3f7fe"/><stop offset=".45" stop-color="#f3f7fe"/><stop offset="1" stop-color="#deeafb"/></linearGradient><linearGradient id="a-13n" x1="30.12" x2="31.88" y1="43.48" y2="46.52" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#86c3db"/><stop offset=".45" stop-color="#86c3db"/><stop offset="1" stop-color="#5eafcf"/></linearGradient><linearGradient id="d-13n" x1="29.67" x2="32.33" y1="42.69" y2="47.31" xlink:href="#a-13n"/><linearGradient id="e-13n" x1="23.12" x2="24.88" y1="43.48" y2="46.52" xlink:href="#a-13n"/><linearGradient id="f-13n" x1="22.67" x2="25.33" y1="42.69" y2="47.31" xlink:href="#a-13n"/><linearGradient id="g-13n" x1="37.12" x2="38.88" y1="43.48" y2="46.52" xlink:href="#a-13n"/><linearGradient id="h-13n" x1="36.67" x2="39.33" y1="42.69" y2="47.31" xlink:href="#a-13n"/></defs><circle cx="19" cy="24" r="5" fill="url(#b-13n)" stroke="#f8af18" stroke-miterlimit="10" stroke-width=".5"/><path fill="none" stroke="#fbbf24" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M19 15.67V12.5m0 23v-3.17m5.89-14.22l2.24-2.24M10.87 32.13l2.24-2.24m0-11.78l-2.24-2.24m16.26 16.26l-2.24-2.24M7.5 24h3.17m19.83 0h-3.17"><animateTransform attributeName="transform" dur="45s" repeatCount="indefinite" type="rotate" values="0 19 24; 360 19 24"/></path><path fill="url(#c-13n)" stroke="#e6effc" stroke-miterlimit="10" stroke-width=".5" d="M46.5 31.5h-.32a10.49 10.49 0 00-19.11-8 7 7 0 00-10.57 6 7.21 7.21 0 00.1 1.14A7.5 7.5 0 0018 45.5a4.19 4.19 0 00.5 0v0h28a7 7 0 000-14z"/><g><circle cx="31" cy="45" r="1.25" fill="none" stroke="url(#a-13n)" stroke-miterlimit="10"/><path fill="none" stroke="url(#d-13n)" stroke-linecap="round" stroke-miterlimit="10" d="M33.17 46.25l-1.09-.63m-2.16-1.24l-1.09-.63M31 42.5v1.25m0 3.75v-1.25m-1.08-.63l-1.09.63m4.34-2.5l-1.09.63"/><animateTransform additive="sum" attributeName="transform" dur="4s" repeatCount="indefinite" type="translate" values="-1 -6; 1 12"/><animateTransform additive="sum" attributeName="transform" dur="9s" repeatCount="indefinite" type="rotate" values="0 31 45; 360 31 45"/><animate attributeName="opacity" dur="4s" repeatCount="indefinite" values="0;1;1;1;0"/></g><g><circle cx="24" cy="45" r="1.25" fill="none" stroke="url(#e-13n)" stroke-miterlimit="10"/><path fill="none" stroke="url(#f-13n)" stroke-linecap="round" stroke-miterlimit="10" d="M26.17 46.25l-1.09-.63m-2.16-1.24l-1.09-.63M24 42.5v1.25m0 3.75v-1.25m-1.08-.63l-1.09.63m4.34-2.5l-1.09.63"/><animateTransform additive="sum" attributeName="transform" begin="-2s" dur="4s" repeatCount="indefinite" type="translate" values="1 -6; -1 12"/><animateTransform additive="sum" attributeName="transform" dur="9s" repeatCount="indefinite" type="rotate" values="0 24 45; 360 24 45"/><animate attributeName="opacity" begin="-2s" dur="4s" repeatCount="indefinite" values="0;1;1;1;0"/></g><g><circle cx="38" cy="45" r="1.25" fill="none" stroke="url(#g-13n)" stroke-miterlimit="10"/><path fill="none" stroke="url(#h-13n)" stroke-linecap="round" stroke-miterlimit="10" d="M40.17 46.25l-1.09-.63m-2.16-1.24l-1.09-.63M38 42.5v1.25m0 3.75v-1.25m-1.08-.63l-1.09.63m4.34-2.5l-1.09.63"/><animateTransform additive="sum" attributeName="transform" begin="-1s" dur="4s" repeatCount="indefinite" type="translate" values="1 -6; -1 12"/><animateTransform additive="sum" attributeName="transform" dur="9s" repeatCount="indefinite" type="rotate" values="0 38 45; 360 38 45"/><animate attributeName="opacity" begin="-1s" dur="4s" repeatCount="indefinite" values="0;1;1;1;0"/></g></svg>
+        <svg class="weather-icon" id="icon-50d" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 64 64"><defs><linearGradient id="a-50d" x1="27.5" x2="36.5" y1="17.21" y2="32.79" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#d4d7dd"/><stop offset=".45" stop-color="#d4d7dd"/><stop offset="1" stop-color="#bec1c6"/></linearGradient><linearGradient id="b-50d" y1="24.21" y2="39.79" xlink:href="#a-50d"/><linearGradient id="c-50d" y1="31.21" y2="46.79" xlink:href="#a-50d"/></defs><path fill="none" stroke="url(#a-50d)" stroke-linecap="round" stroke-miterlimit="10" stroke-width="3" d="M17 25h30"><animateTransform attributeName="transform" begin="0s" dur="5s" repeatCount="indefinite" type="translate" values="-4 0; 4 0; -4 0"/></path><path fill="none" stroke="url(#b-50d)" stroke-linecap="round" stroke-miterlimit="10" stroke-width="3" d="M17 32h30"><animateTransform attributeName="transform" begin="-2s" dur="5s" repeatCount="indefinite" type="translate" values="-3 0; 3 0; -3 0"/></path><path fill="none" stroke="url(#c-50d)" stroke-linecap="round" stroke-miterlimit="10" stroke-width="3" d="M17 39h30"><animateTransform attributeName="transform" begin="-4s" dur="5s" repeatCount="indefinite" type="translate" values="-4 0; 4 0; -4 0"/></path></svg>
+        <svg class="weather-icon" id="icon-50n" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 64 64"><defs><linearGradient id="a-50n" x1="27.5" x2="36.5" y1="17.21" y2="32.79" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#d4d7dd"/><stop offset=".45" stop-color="#d4d7dd"/><stop offset="1" stop-color="#bec1c6"/></linearGradient><linearGradient id="b-50n" y1="24.21" y2="39.79" xlink:href="#a-50n"/><linearGradient id="c-50n" y1="31.21" y2="46.79" xlink:href="#a-50n"/></defs><path fill="none" stroke="url(#a-50n)" stroke-linecap="round" stroke-miterlimit="10" stroke-width="3" d="M17 25h30"><animateTransform attributeName="transform" begin="0s" dur="5s" repeatCount="indefinite" type="translate" values="-4 0; 4 0; -4 0"/></path><path fill="none" stroke="url(#b-50n)" stroke-linecap="round" stroke-miterlimit="10" stroke-width="3" d="M17 32h30"><animateTransform attributeName="transform" begin="-2s" dur="5s" repeatCount="indefinite" type="translate" values="-3 0; 3 0; -3 0"/></path><path fill="none" stroke="url(#c-50n)" stroke-linecap="round" stroke-miterlimit="10" stroke-width="3" d="M17 39h30"><animateTransform attributeName="transform" begin="-4s" dur="5s" repeatCount="indefinite" type="translate" values="-4 0; 4 0; -4 0"/></path></svg>
+        <section id="temperature-description-container">
+            <div id="temp-unit-container">
+                <h1 id="temperature">N/A<sup>°C</sup></h1>
+            </div>
+            <h3 id="weather-description">N/A</h3>
+        </section>
+        <section id="details-container">
+            <div class="details-item" id="wind">
+                <p>Wind</p>
+                <div class="details-value-unit-container">
+                    <h4 class="details-item-val" id="wind-val">N/A<span class="details-unit" id="wind-unit">km/h</span></h4>
+                </div>
+            </div>
+            <div class="details-item" id="humidity">
+                <p>Humidity</p>
+                <div class="details-value-unit-container">
+                    <h4 class="details-item-val" id="humidity-val">N/A<span class="details-unit" id="humidity-unit">%</span></h4>
+                </div>
+            </div>  
+            <div class="details-item" id="feels-like">
+                <p>Feels Like</p>
+                <div class="details-value-unit-container">
+                    <h4 class="details-item-val" id="feels-like-val">N/A<span class="details-unit" id="feels-like-unit">°C</span></h4>
+                </div>
+            </div>
+        </section>
+    </main>
+    <section id="settings-container">
+        <header id="settings-header">
+            <h4>Settings</h4>
+            <div class="settings-header-item" id="close-settings-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M160-240q-17 0-28.5-11.5T120-280q0-17 11.5-28.5T160-320h640q17 0 28.5 11.5T840-280q0 17-11.5 28.5T800-240H160Zm0-200q-17 0-28.5-11.5T120-480q0-17 11.5-28.5T160-520h640q17 0 28.5 11.5T840-480q0 17-11.5 28.5T800-440H160Zm0-200q-17 0-28.5-11.5T120-680q0-17 11.5-28.5T160-720h640q17 0 28.5 11.5T840-680q0 17-11.5 28.5T800-640H160Z" fill="#242424"/></svg>
+            </div>
+        </header>
+        <section id="settings-body">
+            <section class="settings-body-item" id="location-container">
+                <header>
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M480-186q122-112 181-203.5T720-552q0-109-69.5-178.5T480-800q-101 0-170.5 69.5T240-552q0 71 59 162.5T480-186Zm0 79q-14 0-28-5t-25-15q-65-60-115-117t-83.5-110.5q-33.5-53.5-51-103T160-552q0-150 96.5-239T480-880q127 0 223.5 89T800-552q0 45-17.5 94.5t-51 103Q698-301 648-244T533-127q-11 10-25 15t-28 5Zm0-453Zm0 80q33 0 56.5-23.5T560-560q0-33-23.5-56.5T480-640q-33 0-56.5 23.5T400-560q0 33 23.5 56.5T480-480Z" fill="#242424" /></svg>
+                    <h5>Location</h5>
+                </header>
+                <section class="double-button-container">
+                    <button class="selected-double-button">Your Location</button>
+                    <button class="unselected-double-button">Custom</button>
+                </section>
+            </section>
+            <section class="settings-body-item" id="temperature-unit-container">
+                <header>
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M480-80q-83 0-141.5-58.5T280-280q0-48 21-89.5t59-70.5v-320q0-50 35-85t85-35q50 0 85 35t35 85v320q38 29 59 70.5t21 89.5q0 83-58.5 141.5T480-80Zm-40-440h80v-40h-40v-40h40v-80h-40v-40h40v-40q0-17-11.5-28.5T480-800q-17 0-28.5 11.5T440-760v240Z" fill="#242424" /></svg>
+                    <h5>Temperature Unit</h5>
+                </header>
+                <section class="tripple-button-container">
+                    <button class="selected-tripple-button">Celsius</button>
+                    <button class="unselected-tripple-button">Fahrenheit</button>
+                    <button class="unselected-tripple-button">Kelvin</button>
+                </section>
+            </section>
+            <section class="settings-body-item" id="wind-speed-unit-container">
+                <header>
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M460-160q-32 0-59.5-16T356-220q-11-20-.5-40t32.5-20q13 0 23 8t18 18q5 7 13.5 10.5T460-240q17 0 28.5-11.5T500-280q0-17-11.5-28.5T460-320H120q-17 0-28.5-11.5T80-360q0-17 11.5-28.5T120-400h340q50 0 85 35t35 85q0 50-35 85t-85 35ZM120-560q-17 0-28.5-11.5T80-600q0-17 11.5-28.5T120-640h500q25 0 42.5-17.5T680-700q0-25-17.5-42.5T620-760q-16 0-30 7.5T568-731q-7 12-17 21.5t-24 9.5q-20 0-32.5-15t-6.5-32q14-42 50.5-67.5T620-840q58 0 99 41t41 99q0 58-41 99t-99 41H120Zm678 308q-20 9-39-2.5T740-288q0-14 9.5-23.5T771-328q14-8 21.5-22t7.5-30q0-25-17.5-42.5T740-440H120q-17 0-28.5-11.5T80-480q0-17 11.5-28.5T120-520h620q58 0 99 41t41 99q0 42-22 76.5T798-252Z" fill="#242424" /></svg>
+                    <h5>Wind Speed Unit</h5>
+                </header>
+                <section class="double-button-container">
+                    <button class="selected-double-button">km/h</button>
+                    <button class="unselected-double-button">mi/h</button>
+                </section>
+            </section>
+            <section class="settings-body-item" id="time">
+                <header>
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M520-496v-144q0-17-11.5-28.5T480-680q-17 0-28.5 11.5T440-640v159q0 8 3 15.5t9 13.5l132 132q11 11 28 11t28-11q11-11 11-28t-11-28L520-496ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-400Zm0 320q133 0 226.5-93.5T800-480q0-133-93.5-226.5T480-800q-133 0-226.5 93.5T160-480q0 133 93.5 226.5T480-160Z" fill="#242424" /></svg>
+                    <h5>Time</h5>
+                </header>
+                <section class="edit-button-container">
+                    <div id="text-wrapper">
+                        <strong>Time Zone</strong>
+                        <p>(UTC +01:00) Berlin</p>
+                    </div>
+                    <svg width="45" height="44" viewBox="0 0 45 44" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="0.299988" width="44" height="44" rx="16" fill="white"/><mask id="mask0_1_280" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="10" y="10" width="25" height="24"><rect x="10.3" y="10" width="24" height="24" fill="#D9D9D9"/></mask><g mask="url(#mask0_1_280)"><path d="M15.3 29H16.725L26.5 19.225L25.075 17.8L15.3 27.575V29ZM13.3 31V26.75L26.5 13.575C26.7 13.3917 26.9208 13.25 27.1625 13.15C27.4042 13.05 27.6583 13 27.925 13C28.1917 13 28.45 13.05 28.7 13.15C28.95 13.25 29.1667 13.4 29.35 13.6L30.725 15C30.925 15.1833 31.0708 15.4 31.1625 15.65C31.2542 15.9 31.3 16.15 31.3 16.4C31.3 16.6667 31.2542 16.9208 31.1625 17.1625C31.0708 17.4042 30.925 17.625 30.725 17.825L17.55 31H13.3ZM25.775 18.525L25.075 17.8L26.5 19.225L25.775 18.525Z" fill="#2373B0"/></g></svg>
+                </section>
+                <header id="time-format-header"><h5>Time Format</h5></header>
+                <section class="double-button-container">
+                    <button class="selected-double-button">24h</button>
+                    <button class="unselected-double-button">12h</button>
+                </section>
+            </section>
+            <section class="settings-body-item" id="theme">
+                <header>
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M480-120q-133 0-226.5-92.5T160-436q0-66 25-122t69-100l184-181q9-8 20-12.5t22-4.5q11 0 22 4.5t20 12.5l184 181q44 44 69 100t25 122q0 131-93.5 223.5T480-120Zm0-80v-568L310-600q-35 33-52.5 74.5T240-436q0 97 70 166.5T480-200Z" fill="#242424" /></svg>
+                    <h5>Theme</h5>
+                </header>
+                <section class="tripple-button-container" id="theme-button-container">
+                    <button class="selected-tripple-button">Auto</button>
+                    <button class="unselected-tripple-button">Light</button>
+                    <button class="unselected-tripple-button">Dark</button>
+                </section>
+            </section>
+            <section class="settings-body-item" id="layout">
+                <header>
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720v480q0 33-23.5 56.5T800-160H160q-33 0-56.5-23.5T80-240Zm720-280v-200H160v200h640ZM400-240h400v-200H400v200Zm-240 0h160v-200H160v200Z" fill="#242424" /></svg>
+                    <h5>Layout</h5>
+                </header>
+                <section class="double-button-container">
+                    <button class="selected-double-button">Vertical</button>
+                    <button class="unselected-double-button">Horizontal</button>
+                </section>
+            </section>
+        </section>
+    </section>
+
+    <script defer>
+        const weatherContainer = document.getElementById('weather-container');
+        const settingsContainer = document.getElementById('settings-container');
+
+        const timeRefreshContainerElement = document.getElementById('time-refresh-container');
+        const timeElement = document.getElementById('time');
+        const refreshElement = document.getElementById('refresh-icon');
+        const refreshingElement = document.getElementById('refreshing-icon');
+
+        const open_settings_icon = document.getElementById('open-settings-icon');
+        const close_settings_icon = document.getElementById('close-settings-icon');
+
+        const cityElement = document.getElementById('city-name');
+        const skeletonWeatherIconElement = document.getElementById('skeleton-weather-icon');
+        const tempElement = document.getElementById('temperature');
+        const descriptionElement = document.getElementById('weather-description');
+        const windElement = document.getElementById('wind-val');
+        const humidityElement = document.getElementById('humidity-val');
+        const feelsLikeElement = document.getElementById('feels-like-val');
+
+        const API_KEY = '6789d5a6b5cb0ce6f47e021e1fafbf6e';
+
+        const refresh = () => {
+            refreshElement.style.display = 'none';
+            refreshingElement.style.display = 'inline';
+
+            setTimeout(() => {
+                timeElement.textContent = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', hour12: false});
+
+                fetchWeatherData('Osaka');
+
+                refreshingElement.style.display = 'none';
+                refreshElement.style.display = 'inline';
+                skeletonWeatherIconElement.style.display = 'none';
+            }, 2000);
+        }
+
+        const openSettings = () => {
+            weatherContainer.style.display = 'none';
+            settingsContainer.style.display = 'flex';
+        }
+
+        const closeSettings = () => {
+            settingsContainer.style.display = 'none';
+            weatherContainer.style.display = 'flex';
+
+            refresh();
+        }
+
+        const toTitleCase = (str) => {
+            return str.replace(/\w\S*/g, (txt) => {
+                return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+            });
+        }
+
+        const fetchWeatherData = (city) => {
+            const url = `http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}`;    
+
+            fetch(url, {
+                method: 'POST',
+                body: JSON.stringify({ city: city })
+            })
+            .then(res => res.json())
+            .then(data => {
+                const city = data.name;
+                const temperature = Math.floor(data.main.temp - 273.15);
+                const weatherDescription = data.weather[0].description;
+
+                cityElement.innerHTML = ''; // Vorherige Inhalte loeschen
+                cityElement.textContent += `${city}`;
+                
+                const weatherIcon = `icon-${data.weather[0].icon}`;
+                console.log(weatherIcon);
+                document.getElementById(weatherIcon).style.display = 'inline';
+
+                console.log(data.weather[0].icon);
+
+                tempElement.innerHTML = '';
+                tempElement.innerHTML += `${temperature}<sup>°C</sup></sup>`;
+                
+                descriptionElement.innerHTML = '';
+                descriptionElement.textContent = `${toTitleCase(weatherDescription)}`;
+
+                windElement.innerHTML = '';
+                windElement.innerHTML = `${data.wind.speed}<span class="details-unit" id="wind-unit">km/h</span>`
+
+                humidityElement.innerHTML = '';
+                humidityElement.innerHTML = `${data.main.humidity}<span class="details-unit" id="humidity-unit">%</span>`;
+
+                feelsLikeElement.innerHTML = '';
+                feelsLikeElement.innerHTML = `${(data.main.feels_like-273.15).toFixed(1)}<sup class="details-unit" id="feels-like-unit">°C</sup>`;
+
+                console.log(data);
+            })
+            .catch(err => {
+                console.error('Error fetching weather data:', err);
+                document.getElementById('skeleton-weather-icon').style.display = 'block';
+            });
+        }
+
+        timeRefreshContainerElement.addEventListener('click', refresh);
+
+        open_settings_icon.addEventListener('click', openSettings);
+        close_settings_icon.addEventListener('click', closeSettings);
+
+
+        refresh();
+    </script>
+</body>
+</html>
