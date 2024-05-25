@@ -196,15 +196,18 @@ main {
 /* Settings */
 
 #settings-container {
-    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     gap: 10px;
 
-    width: 24.5188rem;
-    height: 43.4956rem;
-    padding: 2.5rem;
+    min-width: 24.5188rem;
+    max-height: 43.4956rem;
+    /* padding: 2.5rem; */
+    padding-top: 2.5rem;
+    padding-left: 2.5rem;
+    padding-bottom: 2.5rem;
+    padding-right: 5px;
     border-radius: 4rem;
     white-space: nowrap;
     background-color: white;
@@ -216,8 +219,9 @@ main {
 
 #settings-header {
     width: 100%;
+    max-width: 312.29px;
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: space-between;
 
     padding-bottom: 5px;
@@ -239,12 +243,30 @@ main {
     flex-direction: column;
     justify-content: flex-start;
     gap: 15px;
+    padding-right: 15px;
+    overflow: auto;
+}
 
-    padding: 15px 0;
+#settings-body::-webkit-scrollbar {
+    background-color: transparent;
+}
+
+#settings-body::-webkit-scrollbar-button {
+    display: none;
+}
+
+#settings-body::-webkit-scrollbar-thumb {
+    border-radius: 1rem;
+    background-color: var(--container);
+}
+
+#settings-body::-webkit-scrollbar-thumb:active {
+    background-color: #0000001a;
 }
 
 .settings-body-item {
     width: 100%;
+    max-width: 312.28px;
     display: flex;
     flex-direction: column;
     align-items: center;

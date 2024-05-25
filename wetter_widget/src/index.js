@@ -6,9 +6,6 @@ const timeElement = document.getElementById('time');
 const refreshElement = document.getElementById('refresh-icon');
 const refreshingElement = document.getElementById('refreshing-icon');
 
-const open_settings_icon = document.getElementById('open-settings-icon');
-const close_settings_icon = document.getElementById('close-settings-icon');
-
 const cityElement = document.getElementById('city-name');
 const skeletonWeatherIconElement = document.getElementById('skeleton-weather-icon');
 const tempElement = document.getElementById('temperature');
@@ -16,6 +13,20 @@ const descriptionElement = document.getElementById('weather-description');
 const windElement = document.getElementById('wind-val');
 const humidityElement = document.getElementById('humidity-val');
 const feelsLikeElement = document.getElementById('feels-like-val');
+
+// Settings
+const open_settings_icon = document.getElementById('open-settings-icon');
+const close_settings_icon = document.getElementById('close-settings-icon');
+
+const yourLocationSetting = document.getElementById('your-location');
+const customLocationSetting = document.getElementById('custom-location');
+
+const tempCelsiusSetting = document.getElementById('temp-celsius');
+const tempFahrenheitSetting = document.getElementById('temp-fahrenheit');
+const tempKelvinSetting = document.getElementById('temp-kelvin');
+
+const kmhSetting = document.getElementById('kmh');
+const mihSetting = document.getElementById('mih');
 
 const API_KEY = '6789d5a6b5cb0ce6f47e021e1fafbf6e';
 
@@ -102,5 +113,78 @@ timeRefreshContainerElement.addEventListener('click', refresh);
 open_settings_icon.addEventListener('click', openSettings);
 close_settings_icon.addEventListener('click', closeSettings);
 
+yourLocationSetting.addEventListener('click', () => {
+    if (yourLocationSetting.className !== 'selected-double-button') {
+        yourLocationSetting.className = 'selected-double-button';
+        customLocationSetting.className = 'unselected-double-button';
+    } else {
+        console.log('Setting already selected');
+    }
+});
+
+customLocationSetting.addEventListener('click', () => {
+    if (customLocationSetting.className !== 'selected-double-button') {
+        customLocationSetting.className = 'selected-double-button';
+        yourLocationSetting.className = 'unselected-double-button';
+    } else {
+        console.log('Setting already selected');
+    }
+});
+
+tempCelsiusSetting.addEventListener('click', () => {
+    if (tempCelsiusSetting.className !== 'selected-tripple-button') {
+        tempCelsiusSetting.className = 'selected-tripple-button';
+        tempFahrenheitSetting.className = 'unselected-tripple-button';
+        tempKelvinSetting.className = 'unselected-tripple-button';
+    } else {
+        tempFahrenheitSetting.className = 'unselected-tripple-button';
+        tempKelvinSetting.className = 'unselected-tripple-button';
+        console.log('Setting already selected');
+    }
+});
+
+tempFahrenheitSetting.addEventListener('click', () => {
+    if (tempFahrenheitSetting.className !== 'selected-tripple-button') {
+        tempFahrenheitSetting.className = 'selected-tripple-button';
+        tempCelsiusSetting.className = 'unselected-tripple-button';
+        tempKelvinSetting.classList = 'unselected-tripple-button';
+    } else {
+        tempCelsiusSetting.className = 'unselected-tripple-button';
+        tempKelvinSetting.classList = 'unselected-tripple-button';
+        console.log('Setting already selected');
+    }
+});
+
+tempKelvinSetting.addEventListener('click', () => {
+    if (tempKelvinSetting.className !== 'selected-tripple-button') {
+        tempKelvinSetting.className = 'selected-tripple-button';
+        tempCelsiusSetting.className = 'unselected-tripple-button';
+        tempFahrenheitSetting.class = 'unselected-tripple-button';
+    } else {
+        tempCelsiusSetting.className = 'unselected-tripple-button';
+        tempFahrenheitSetting.className = 'unselected-tripple-button';
+        console.log('Setting already selected');
+    }
+});
+
+kmhSetting.addEventListener('click', () => {
+    if (kmhSetting.className !== 'selected-double-button') {
+        kmhSetting.className = 'selected-double-button';
+        mihSetting.className = 'unselected-double-button';
+    } else {
+        mihSetting.className = 'unselected-double-button';
+        console.log('Setting already selected');
+    }
+});
+
+mihSetting.addEventListener('click', () => {
+    if (mihSetting.className !== 'selected-double-button') {
+        mihSetting.className = 'selected-double-button';
+        kmhSetting.className = 'unselected-double-button';
+    } else {
+        kmhSetting.className = 'unselected-double-button';
+        console.log('Setting already selected');
+    }
+});
 
 refresh();
