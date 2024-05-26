@@ -159,7 +159,7 @@ tempKelvinSetting.addEventListener('click', () => {
     if (tempKelvinSetting.className !== 'selected-tripple-button') {
         tempKelvinSetting.className = 'selected-tripple-button';
         tempCelsiusSetting.className = 'unselected-tripple-button';
-        tempFahrenheitSetting.class = 'unselected-tripple-button';
+        tempFahrenheitSetting.className = 'unselected-tripple-button';
     } else {
         tempCelsiusSetting.className = 'unselected-tripple-button';
         tempFahrenheitSetting.className = 'unselected-tripple-button';
