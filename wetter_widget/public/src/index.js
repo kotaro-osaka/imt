@@ -28,6 +28,16 @@ const tempKelvinSetting = document.getElementById('temp-kelvin');
 const kmhSetting = document.getElementById('kmh');
 const mihSetting = document.getElementById('mih');
 
+const timeMilitarySetting = document.getElementById('time-military');
+const timeAmPmSetting = document.getElementById('time-am-pm');
+
+const themeAuto = document.getElementById('theme-auto');
+const themeLight = document.getElementById('theme-light');
+const themeDark = document.getElementById('theme-dark');
+
+const layoutVertical = document.getElementById('layout-vertical');
+const layoutHorizontal = document.getElementById('layout-horizontal');
+
 const API_KEY = '6789d5a6b5cb0ce6f47e021e1fafbf6e';
 
 const refresh = () => {
@@ -183,6 +193,82 @@ mihSetting.addEventListener('click', () => {
         kmhSetting.className = 'unselected-double-button';
     } else {
         kmhSetting.className = 'unselected-double-button';
+        console.log('Setting already selected');
+    }
+});
+
+timeMilitarySetting.addEventListener('click', () => {
+    if (timeMilitarySetting.className !== 'selected-double-button') {
+        timeMilitarySetting.className = 'selected-double-button';
+        timeAmPmSetting.className = 'unselected-double-button';
+    } else {
+        timeAmPmSetting.className = 'unselected-double-button';
+        console.log('Setting already selected');
+    }
+});
+
+timeAmPmSetting.addEventListener('click', () => {
+    if (timeAmPmSetting.className !== 'selected-double-button') {
+        timeAmPmSetting.className = 'selected-double-button';
+        timeMilitarySetting.className = 'unselected-double-button';
+    } else {
+        timeMilitarySetting.className = 'unselected-double-button';
+        console.log('Setting already selected');
+    }
+});
+
+themeAuto.addEventListener('click', () => {
+    if (themeAuto.className !== 'selected-tripple-button') {
+        themeAuto.className = 'selected-tripple-button';
+        themeLight.className = 'unselected-tripple-button';
+        themeDark.className = 'unselected-tripple-button'
+    } else {
+        themeLight.className = 'unselected-tripple-button';
+        themeDark.className = 'unselected-tripple-button';
+        console.log('Setting already selected')
+    }
+});
+
+themeLight.addEventListener('click', () => {
+    if (themeLight.className !== 'selected-tripple-button') {
+        themeLight.className = 'selected-tripple-button';
+        themeAuto.className = 'unselected-tripple-button';
+        themeDark.className = 'unselected-tripple-button'
+    } else {
+        themeAuto.className = 'unselected-tripple-button';
+        themeDark.className = 'unselected-tripple-button';
+        console.log('Setting already selected')
+    }
+});
+
+themeDark.addEventListener('click', () => {
+    if (themeDark.className !== 'selected-tripple-button') {
+        themeDark.className = 'selected-tripple-button';
+        themeAuto.className = 'unselected-tripple-button';
+        themeLight.className = 'unselected-tripple-button'
+    } else {
+        themeAuto.className = 'unselected-tripple-button';
+        themeLight.className = 'unselected-tripple-button';
+        console.log('Setting already selected')
+    }
+});
+
+layoutVertical.addEventListener('click', () => {
+    if (layoutVertical.className !== 'selected-double-button') {
+        layoutVertical.className = 'selected-double-button';
+        layoutHorizontal.className = 'unselected-double-button';
+    } else {
+        layoutHorizontal.className = 'unselected-double-button';
+        console.log('Setting already selected');
+    }
+});
+
+layoutHorizontal.addEventListener('click', () => {
+    if (layoutHorizontal.className !== 'selected-double-button') {
+        layoutHorizontal.className = 'selected-double-button';
+        layoutVertical.className = 'unselected-double-button';
+    } else {
+        layoutVertical.className = 'unselected-double-button';
         console.log('Setting already selected');
     }
 });

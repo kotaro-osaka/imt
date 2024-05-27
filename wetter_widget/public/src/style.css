@@ -312,6 +312,10 @@ main {
     cursor: pointer;
 }
 
+.selected-double-button:hover {
+    background-color: #f6f8ff;
+}
+
 .unselected-double-button {
     width: 50%;
     display: flex;
@@ -323,6 +327,10 @@ main {
     color: var(--black);
     font-weight: 600;
     cursor: pointer;
+}
+
+.unselected-double-button:hover {
+    background-color: #f9f9f9;
 }
 
 .tripple-button-container {
@@ -350,6 +358,10 @@ main {
     cursor: pointer;
 }
 
+.selected-tripple-button:hover {
+    background-color: #F6F8FF;
+}
+
 .unselected-tripple-button {
     width: calc(100/3);
     display: flex;
@@ -363,6 +375,10 @@ main {
     cursor: pointer;
 }
 
+.unselected-tripple-button:hover {
+    background-color: #F6F8FF;
+}
+
 .edit-button-container {
     width: 100%;
     display: flex;
@@ -373,6 +389,14 @@ main {
     border-radius: 16px;
     color: var(--black);
     background-color: var(--container);
+}
+
+#timezone-edit-button {
+    cursor: pointer;
+}
+
+#timezone-edit-button:hover rect {
+    fill: #f6f8ff;
 }
 
 #time-format-header {
