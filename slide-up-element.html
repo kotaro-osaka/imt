@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #hidden-social-container {
+            border: 1px solid black;
+            width: 200px;
+            height: 32px;
+            position: relative;
+            top: 20px;
+            left: 40px;
+            overflow: hidden;
+        }
+
+        #hidden-social {
+            width: 145px;
+        }
+
+        @keyframes slide-up {
+            from {
+                margin-top: 100%;
+            }
+            to {
+                margin-top: 0%;
+            }
+        }
+
+        @keyframes slide-down {
+            from {
+                margin-top: 0%;
+            }
+            to {
+                margin-top: 100%;
+                display: none;
+            }
+        }
+
+        .social-icon-2 {
+            width: 25px;
+        }
+
+        .social-icon-p2 {
+            width: 15px;
+        }
+    </style>
+</head>
+<body>
+    <button onclick="myFunction()">Click Me</button>
+
+    <div id="hidden-social-container">
+        <div id="hidden-social"  style="display:none;">
+
+            <span>A</span>
+
+            <span>B</span>
+
+            <span>C</span>
+
+            <span>D</span>
+
+            <span>E</span>
+        </div>
+    </div>
+
+    <script defer>
+        function myFunction() {
+            var x = document.getElementById("hidden-social");
+
+            x.addEventListener("animationend", function(e) {
+                e.preventDefault();
+
+                if(x.style.animationName == "slide-down") {
+                    x.style.display = "none";
+                }
+            });
+
+            if (x.style.display === "none") {
+                x.style.display = "block";
+                x.style.animation = "1s slide-up";
+            }
+            else {
+                x.style.animation = "1s slide-down";
+            }
+        }
+    </script>
+</body>
+</html>

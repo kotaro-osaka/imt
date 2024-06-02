@@ -91,7 +91,7 @@ main {
     min-width: 24.5188rem;
     min-height: 43.4956rem;
     padding: 2.5rem;
-    border-radius: 4rem;
+    border-radius: 3rem;
     white-space: nowrap;
     background: var(--bright-background);
 }
@@ -118,6 +118,10 @@ main {
 
 .top-nav-item:active {
     background-color: #7bbdf0;
+}
+
+.top-nav-item:hover {
+    background-color: #50a6e7;
 }
 
 #time-refresh-container {
@@ -203,12 +207,11 @@ main {
 
     min-width: 24.5188rem;
     max-height: 43.4956rem;
-    /* padding: 2.5rem; */
     padding-top: 2.5rem;
     padding-left: 2.5rem;
     padding-bottom: 2.5rem;
     padding-right: 5px;
-    border-radius: 4rem;
+    border-radius: 3rem;
     white-space: nowrap;
     background-color: white;
 }
@@ -292,6 +295,7 @@ main {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 5px;
 
     padding: 5px;
     border-radius: 16px;

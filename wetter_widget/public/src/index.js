@@ -1,6 +1,7 @@
 const weatherContainer = document.getElementById('weather-container');
 const settingsContainer = document.getElementById('settings-container');
 
+// Weather
 const timeRefreshContainerElement = document.getElementById('time-refresh-container');
 const timeElement = document.getElementById('time');
 const refreshElement = document.getElementById('refresh-icon');
@@ -8,6 +9,7 @@ const refreshingElement = document.getElementById('refreshing-icon');
 
 const cityElement = document.getElementById('city-name');
 const skeletonWeatherIconElement = document.getElementById('skeleton-weather-icon');
+const allWeatherIcons = document.querySelectorAll('.weather-icon');
 const tempElement = document.getElementById('temperature');
 const descriptionElement = document.getElementById('weather-description');
 const windElement = document.getElementById('wind-val');
@@ -38,20 +40,33 @@ const themeDark = document.getElementById('theme-dark');
 const layoutVertical = document.getElementById('layout-vertical');
 const layoutHorizontal = document.getElementById('layout-horizontal');
 
-const API_KEY = '6789d5a6b5cb0ce6f47e021e1fafbf6e';
+let city = 'Osaka';
+let useUserLocation = true;
+let timeMilitary = true;
 
 const refresh = () => {
     refreshElement.style.display = 'none';
     refreshingElement.style.display = 'inline';
 
     setTimeout(() => {
-        timeElement.textContent = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', hour12: false});
+        timeElement.textContent = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', hour12: !timeMilitary});
 
-        // fetchWeatherData('Osaka');
+        if (useUserLocation === true) {
+            fetchUserLocation()
+                .then(location => {
+                    console.log(`latitude: ${location.lat}\nlongitude: ${location.lon}`);
+                    fetchWeatherData(location.lat, location.lon, null);
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        } else if (useUserLocation === false) {
+            fetchWeatherData(null, null, city);
+        }
 
         refreshingElement.style.display = 'none';
         refreshElement.style.display = 'inline';
-        // skeletonWeatherIconElement.style.display = 'none';
+        skeletonWeatherIconElement.style.display = 'none';
     }, 2000);
 }
 
@@ -73,9 +88,30 @@ const toTitleCase = (str) => {
     });
 }
 
-const fetchWeatherData = (city) => {
-    const url = `http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}`;    
+const fetchUserLocation = () => {
+    return new Promise((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(position => {
+                const lat = position.coords.latitude;
+                const lon = position.coords.longitude;
+                resolve({ lat, lon });
+            },
+            err => {
+                reject(err);
+            }
+        );
+    });
+}
 
+const fetchWeatherData = (lat, lon, city) => {
+    const API_KEY = '6789d5a6b5cb0ce6f47e021e1fafbf6e';
+    let url;
+
+    if (lat !== undefined && lat !== null && lon !== undefined && lon !== null) {
+        url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}`;
+    } else if (city !== undefined) {
+        url = `http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}`;
+    }
+    
     fetch(url, {
         method: 'POST',
         body: JSON.stringify({ city: city })
@@ -89,11 +125,11 @@ const fetchWeatherData = (city) => {
         cityElement.innerHTML = ''; // Vorherige Inhalte loeschen
         cityElement.textContent += `${city}`;
         
+        allWeatherIcons.forEach(element => {
+            element.style.display = 'none';
+        });
         const weatherIcon = `icon-${data.weather[0].icon}`;
-        console.log(weatherIcon);
         document.getElementById(weatherIcon).style.display = 'inline';
-
-        console.log(data.weather[0].icon);
 
         tempElement.innerHTML = '';
         tempElement.innerHTML += `${temperature}<sup>°C</sup></sup>`;
@@ -102,7 +138,7 @@ const fetchWeatherData = (city) => {
         descriptionElement.textContent = `${toTitleCase(weatherDescription)}`;
 
         windElement.innerHTML = '';
-        windElement.innerHTML = `${data.wind.speed}<span class="details-unit" id="wind-unit">km/h</span>`
+        windElement.innerHTML = `${data.wind.speed}<span class="details-unit" id="wind-unit">KPH</span>`
 
         humidityElement.innerHTML = '';
         humidityElement.innerHTML = `${data.main.humidity}<span class="details-unit" id="humidity-unit">%</span>`;
@@ -127,7 +163,9 @@ yourLocationSetting.addEventListener('click', () => {
     if (yourLocationSetting.className !== 'selected-double-button') {
         yourLocationSetting.className = 'selected-double-button';
         customLocationSetting.className = 'unselected-double-button';
+        useUserLocation = true;
     } else {
+        useUserLocation = true;
         console.log('Setting already selected');
     }
 });
@@ -136,7 +174,9 @@ customLocationSetting.addEventListener('click', () => {
     if (customLocationSetting.className !== 'selected-double-button') {
         customLocationSetting.className = 'selected-double-button';
         yourLocationSetting.className = 'unselected-double-button';
+        useUserLocation = false;
     } else {
+        useUserLocation = false;
         console.log('Setting already selected');
     }
 });
@@ -201,8 +241,10 @@ timeMilitarySetting.addEventListener('click', () => {
     if (timeMilitarySetting.className !== 'selected-double-button') {
         timeMilitarySetting.className = 'selected-double-button';
         timeAmPmSetting.className = 'unselected-double-button';
+        timeMilitary = true;
     } else {
         timeAmPmSetting.className = 'unselected-double-button';
+        timeMilitary = true;
         console.log('Setting already selected');
     }
 });
@@ -211,8 +253,10 @@ timeAmPmSetting.addEventListener('click', () => {
     if (timeAmPmSetting.className !== 'selected-double-button') {
         timeAmPmSetting.className = 'selected-double-button';
         timeMilitarySetting.className = 'unselected-double-button';
+        timeMilitary = false;
     } else {
         timeMilitarySetting.className = 'unselected-double-button';
+        timeMilitary = false;
         console.log('Setting already selected');
     }
 });
