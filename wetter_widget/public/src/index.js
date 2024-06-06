@@ -103,7 +103,7 @@ const fetchUserLocation = () => {
 }
 
 const fetchWeatherData = (lat, lon, city) => {
-    const API_KEY = '6789d5a6b5cb0ce6f47e021e1fafbf6e';
+    // const API_KEY = '6789d5a6b5cb0ce6f47e021e1fafbf6e';
     let url;
 
     if (lat !== undefined && lat !== null && lon !== undefined && lon !== null) {

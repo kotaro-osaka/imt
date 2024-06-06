@@ -35,8 +35,8 @@ button {
 }
 
 /* Fonts */
-body {
-    font-family: 'Poppins', sans-serif;
+body {  
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif, sans-serif;
     font-weight: 400;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.01);
     color: white;
