@@ -1,3 +1,4 @@
+// Containers
 const weatherContainer = document.getElementById('weather-container');
 const settingsContainer = document.getElementById('settings-container');
 
@@ -42,6 +43,9 @@ const layoutHorizontal = document.getElementById('layout-horizontal');
 
 let city = 'Osaka';
 let useUserLocation = true;
+let useMetricTempUnit = true;
+let useKelvinTempUnit = false;
+let useMetricWindSpeedUnit = true;
 let timeMilitary = true;
 
 const refresh = () => {
@@ -103,7 +107,7 @@ const fetchUserLocation = () => {
 }
 
 const fetchWeatherData = (lat, lon, city) => {
-    // const API_KEY = '6789d5a6b5cb0ce6f47e021e1fafbf6e';
+    const API_KEY = '6789d5a6b5cb0ce6f47e021e1fafbf6e';
     let url;
 
     if (lat !== undefined && lat !== null && lon !== undefined && lon !== null) {
@@ -119,10 +123,9 @@ const fetchWeatherData = (lat, lon, city) => {
     .then(res => res.json())
     .then(data => {
         const city = data.name;
-        const temperature = Math.floor(data.main.temp - 273.15);
         const weatherDescription = data.weather[0].description;
 
-        cityElement.innerHTML = ''; // Vorherige Inhalte loeschen
+        cityElement.innerHTML = '';
         cityElement.textContent += `${city}`;
         
         allWeatherIcons.forEach(element => {
@@ -131,20 +134,44 @@ const fetchWeatherData = (lat, lon, city) => {
         const weatherIcon = `icon-${data.weather[0].icon}`;
         document.getElementById(weatherIcon).style.display = 'inline';
 
+        let temperature;
+        let feelsLikeTemp;
+        let tempUnit;
+        if (useMetricTempUnit === true && useKelvinTempUnit === false) {
+            temperature = Math.floor(data.main.temp - 273.15);
+            feelsLikeTemp = (data.main.feels_like-273.15).toFixed(1);
+            tempUnit = '°C';
+        } else if (useMetricTempUnit === false && useKelvinTempUnit === false) {
+            temperature = Math.floor((data.main.temp - 273.15) * 1.8 + 32);
+            feelsLikeTemp = ((data.main.feels_like - 273.15) * 1.8 + 32).toFixed(1);
+            tempUnit = '°F';
+        } else if (useKelvinTempUnit === true) {
+            temperature = data.main.temp;
+            feelsLikeTemp = data.main.feels_like;
+            tempUnit = 'K';
+        }
         tempElement.innerHTML = '';
-        tempElement.innerHTML += `${temperature}<sup>°C</sup></sup>`;
+        tempElement.innerHTML += `${temperature}<sup>${tempUnit}</sup></sup>`;
+        feelsLikeElement.innerHTML = '';
+        feelsLikeElement.innerHTML = `${feelsLikeTemp}<sup class="details-unit" id="feels-like-unit">${tempUnit}</sup>`;
         
         descriptionElement.innerHTML = '';
         descriptionElement.textContent = `${toTitleCase(weatherDescription)}`;
 
+        let windSpeed;
+        let windSpeedUnit;
+        if (useMetricWindSpeedUnit === true) {
+            windSpeed = (data.wind.speed * 3.6).toFixed(1);
+            windSpeedUnit = 'KPH';
+        } else if (useMetricWindSpeedUnit === false) {
+            windSpeed = (data.wind.speed * 2.237).toFixed(1);
+            windSpeedUnit = 'MPH';
+        }
         windElement.innerHTML = '';
-        windElement.innerHTML = `${data.wind.speed}<span class="details-unit" id="wind-unit">KPH</span>`
+        windElement.innerHTML = `${windSpeed}<span class="details-unit" id="wind-unit">${windSpeedUnit}</span>`
 
         humidityElement.innerHTML = '';
         humidityElement.innerHTML = `${data.main.humidity}<span class="details-unit" id="humidity-unit">%</span>`;
-
-        feelsLikeElement.innerHTML = '';
-        feelsLikeElement.innerHTML = `${(data.main.feels_like-273.15).toFixed(1)}<sup class="details-unit" id="feels-like-unit">°C</sup>`;
 
         console.log(data);
     })
@@ -186,9 +213,13 @@ tempCelsiusSetting.addEventListener('click', () => {
         tempCelsiusSetting.className = 'selected-tripple-button';
         tempFahrenheitSetting.className = 'unselected-tripple-button';
         tempKelvinSetting.className = 'unselected-tripple-button';
+        useMetricTempUnit = true;
+        useKelvinTempUnit = false;
     } else {
         tempFahrenheitSetting.className = 'unselected-tripple-button';
         tempKelvinSetting.className = 'unselected-tripple-button';
+        useMetricTempUnit = true;
+        useKelvinTempUnit = false;
         console.log('Setting already selected');
     }
 });
@@ -198,9 +229,13 @@ tempFahrenheitSetting.addEventListener('click', () => {
         tempFahrenheitSetting.className = 'selected-tripple-button';
         tempCelsiusSetting.className = 'unselected-tripple-button';
         tempKelvinSetting.classList = 'unselected-tripple-button';
+        useMetricTempUnit = false;
+        useKelvinTempUnit = false;
     } else {
         tempCelsiusSetting.className = 'unselected-tripple-button';
         tempKelvinSetting.classList = 'unselected-tripple-button';
+        useMetricTempUnit = false;
+        useKelvinTempUnit = false;
         console.log('Setting already selected');
     }
 });
@@ -210,9 +245,11 @@ tempKelvinSetting.addEventListener('click', () => {
         tempKelvinSetting.className = 'selected-tripple-button';
         tempCelsiusSetting.className = 'unselected-tripple-button';
         tempFahrenheitSetting.className = 'unselected-tripple-button';
+        useKelvinTempUnit = true;
     } else {
         tempCelsiusSetting.className = 'unselected-tripple-button';
         tempFahrenheitSetting.className = 'unselected-tripple-button';
+        useKelvinTempUnit = true;
         console.log('Setting already selected');
     }
 });
@@ -221,8 +258,10 @@ kmhSetting.addEventListener('click', () => {
     if (kmhSetting.className !== 'selected-double-button') {
         kmhSetting.className = 'selected-double-button';
         mihSetting.className = 'unselected-double-button';
+        useMetricWindSpeedUnit = true;
     } else {
         mihSetting.className = 'unselected-double-button';
+        useMetricWindSpeedUnit = true;
         console.log('Setting already selected');
     }
 });
@@ -231,8 +270,10 @@ mihSetting.addEventListener('click', () => {
     if (mihSetting.className !== 'selected-double-button') {
         mihSetting.className = 'selected-double-button';
         kmhSetting.className = 'unselected-double-button';
+        useMetricWindSpeedUnit = false;
     } else {
         kmhSetting.className = 'unselected-double-button';
+        useMetricWindSpeedUnit = false;
         console.log('Setting already selected');
     }
 });
