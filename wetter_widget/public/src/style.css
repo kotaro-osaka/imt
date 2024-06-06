@@ -6,8 +6,8 @@
     --dark-background: linear-gradient(0deg, #383C47 0%, #1e1e2b 100%);
     --accent: #3A80FF;
     --black: #242424;
-    --container: #F0F0F0;
-    --container-on-container: #F9F9F9;
+    --container: #F9F9F9;
+    --container-on-container: #F0F0F0;
 }
 
 /* Reset */
@@ -260,7 +260,7 @@ main {
 
 #settings-body::-webkit-scrollbar-thumb {
     border-radius: 1rem;
-    background-color: var(--container);
+    background-color: var(--container-on-container);
 }
 
 #settings-body::-webkit-scrollbar-thumb:active {
@@ -278,7 +278,7 @@ main {
 
     padding: 15px 10px;
     border-radius: 16px;
-    background-color: var(--container-on-container);
+    background-color: var(--container);
 }
 
 .settings-body-item header {
@@ -299,7 +299,7 @@ main {
 
     padding: 5px;
     border-radius: 16px;
-    background-color: var(--container);
+    background-color: var(--container-on-container);
 }
 
 .selected-double-button {
@@ -345,7 +345,7 @@ main {
 
     padding: 5px;
     border-radius: 16px;
-    background-color: var(--container);
+    background-color: var(--container-on-container);
 }
 
 .selected-tripple-button {
@@ -392,7 +392,17 @@ main {
     padding: 5px;
     border-radius: 16px;
     color: var(--black);
-    background-color: var(--container);
+    background-color: var(--container-on-container);
+}
+
+.settings-body-item div {
+    display: flex;
+    justify-content: flex-start;
+    gap: 10px;
+}
+
+.coming-soon {
+    color: #df5050;
 }
 
 #timezone-edit-button {
@@ -410,8 +420,6 @@ main {
 #theme-button-container button {
     min-width: 90px;
 }
-
-
 
 
 /* Media queries */

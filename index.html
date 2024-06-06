@@ -4,10 +4,442 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wetter Widget</title>
-    <link rel="stylesheet" href="./style.css">
-    <script defer src="./index.js"></script>
 </head>
 <body>
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Poppins:700|Poppins:400');
+
+        /* Variables */
+        :root {
+            --bright-background: linear-gradient(0deg, #80BBE9 0%, #3A80FF 100%);
+            --dark-background: linear-gradient(0deg, #383C47 0%, #1e1e2b 100%);
+            --accent: #3A80FF;
+            --black: #242424;
+            --container: #F9F9F9;
+            --container-on-container: #F0F0F0;
+        }
+
+        /* Reset */
+        *,
+        *::after,
+        *::before {
+            border: 0;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        input,
+        textarea,
+        button {
+            font-family: inherit;
+            font-size: inherit;
+            color: inherit;
+            background: none;
+            -webkit-appearance: none;
+            appearance: none;
+            -moz-appearance: none;
+            border-radius: 0%;
+            -webkit-border-radius: 0;
+        }
+
+        /* Fonts */
+        body {  
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif, sans-serif;
+            font-weight: 400;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.01);
+            color: white;
+        }
+
+        h1, h2, h3, h4 {
+        font-family: 'Poppins', sans-serif;
+        font-weight: 700;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        html {font-size: 100%;} /* 16px */
+
+        h1 {font-size: 3.366rem; /* 53.92px */}
+        h2 {font-size: 2.525rem; /* 40.32px */}
+        h3 {font-size: 1.894rem; /* 30.24px */}
+        h4 {font-size: 1.421rem; /* 22.72px */}
+        h5 {
+            font-size: 1.066rem; /* 17.12px */
+            font-weight: 600;
+        }
+
+        small {font-size: 0.600rem; /* 9.6px */}
+        sup {
+            font-weight: 350;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        html { font-size: 100%; }
+
+
+        /* Main Styles */
+        body {
+            display: flex;
+            justify-content: center;
+            flex-wrap: nowrap;
+
+            padding: 5rem;
+            background-color: slategrey;
+        }
+
+        .skeleton-ui {
+            visibility: hidden;
+        }
+
+        main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+
+            min-width: 24.5188rem;
+            min-height: 43.4956rem;
+            padding: 2.5rem;
+            border-radius: 3rem;
+            white-space: nowrap;
+            background: var(--bright-background);
+        }
+
+        #top-nav {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-bottom: 1.5rem;
+        }
+
+        .top-nav-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+
+            min-height: 44px;
+            padding: 0.5rem;
+            border-radius: 2rem;
+            background-color: #50a1df;
+            cursor: pointer;
+        }
+
+        .top-nav-item:active {
+            background-color: #7bbdf0;
+        }
+
+        .top-nav-item:hover {
+            background-color: #50a6e7;
+        }
+
+        #time-refresh-container {
+            min-width: 85px;
+        }
+
+        #refreshing-icon {
+            display: none;
+        }
+
+        #open-settings-icon {
+            min-width: 44px;
+            min-height: 44px;
+        }
+
+        #skeleton-weather-icon {
+            width: 240px;
+            height: 240px;
+        }
+
+        .weather-icon {
+            display: none;
+            width: 15rem;
+            height: auto;
+        }
+
+        #temperature-description-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #temp-unit-container {
+            display: flex;
+            padding-left: 2rem;
+        }
+
+        #temperature sup { opacity: 75%; }
+
+        #weather-description {
+            text-align: center;
+            white-space: wrap;
+            opacity: 95%;
+        }
+
+        #details-container {
+            display: flex;
+            justify-content: space-around;
+            gap: 2rem;
+
+            margin-top: 2.5rem;
+        }
+
+        .details-value-unit-container { padding-left: 15%; }
+
+        .details-item {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: .5rem;
+        }
+
+        .details-unit { opacity: 60%; }
+
+        #wind-unit { 
+            font-size: 1rem;
+            font-weight: 200;
+        }
+
+        #humidity-unit {
+            font-weight: 200;
+        }
+
+
+        /* Settings */
+
+        #settings-container {
+            display: none;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+
+            min-width: 24.5188rem;
+            max-height: 43.4956rem;
+            padding-top: 2.5rem;
+            padding-left: 2.5rem;
+            padding-bottom: 2.5rem;
+            padding-right: 5px;
+            border-radius: 3rem;
+            white-space: nowrap;
+            background-color: white;
+        }
+
+        #settings-container h5 {
+            color: var(--black);
+        }
+
+        #settings-header {
+            width: 100%;
+            max-width: 312.29px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding-bottom: 5px;
+            color: var(--black);
+            border-bottom: 2px solid var(--container);
+        }
+
+        #close-settings-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        #settings-body {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            gap: 15px;
+            padding-right: 15px;
+            overflow: auto;
+        }
+
+        #settings-body::-webkit-scrollbar {
+            background-color: transparent;
+        }
+
+        #settings-body::-webkit-scrollbar-button {
+            display: none;
+        }
+
+        #settings-body::-webkit-scrollbar-thumb {
+            border-radius: 1rem;
+            background-color: var(--container-on-container);
+        }
+
+        #settings-body::-webkit-scrollbar-thumb:active {
+            background-color: #0000001a;
+        }
+
+        .settings-body-item {
+            width: 100%;
+            max-width: 312.28px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+
+            padding: 15px 10px;
+            border-radius: 16px;
+            background-color: var(--container);
+        }
+
+        .settings-body-item header {
+            width: 100%;
+            display: flex;
+            justify-content: flex-start;
+            gap: 10px;
+
+            margin-bottom: 5px;
+        }
+
+        .double-button-container {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 5px;
+
+            padding: 5px;
+            border-radius: 16px;
+            background-color: var(--container-on-container);
+        }
+
+        .selected-double-button {
+            width: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 10px;
+            border-radius: 16px;
+            color: var(--accent);
+            background-color: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .selected-double-button:hover {
+            background-color: #f6f8ff;
+        }
+
+        .unselected-double-button {
+            width: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 10px;
+            border-radius: 16px;
+            color: var(--black);
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .unselected-double-button:hover {
+            background-color: #f9f9f9;
+        }
+
+        .tripple-button-container {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 5px;
+            border-radius: 16px;
+            background-color: var(--container-on-container);
+        }
+
+        .selected-tripple-button {
+            width: calc(100/3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 10px;
+            border-radius: 16px;
+            color: var(--accent);
+            background-color: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .selected-tripple-button:hover {
+            background-color: #F6F8FF;
+        }
+
+        .unselected-tripple-button {
+            width: calc(100/3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 10px;
+            border-radius: 16px;
+            color: var(--black);
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .unselected-tripple-button:hover {
+            background-color: #F6F8FF;
+        }
+
+        .edit-button-container {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 5px;
+            border-radius: 16px;
+            color: var(--black);
+            background-color: var(--container-on-container);
+        }
+
+        .settings-body-item div {
+            display: flex;
+            justify-content: flex-start;
+            gap: 10px;
+        }
+
+        .coming-soon {
+            color: #df5050;
+        }
+
+        #timezone-edit-button {
+            cursor: pointer;
+        }
+
+        #timezone-edit-button:hover rect {
+            fill: #f6f8ff;
+        }
+
+        #time-format-header {
+            margin: 5px -5px 0;
+        }
+
+        #theme-button-container button {
+            min-width: 90px;
+        }
+
+
+        /* Media queries */
+
+        /* Auto adjust widget background color to device preference */
+        /* @media (prefers-color-scheme: dark) {
+            main {
+                background: var(--dark-background);
+            }
+        } */
+    </style>
     <main id="weather-container">
         <header id="top-nav">
             <div class="top-nav-item" id="time-refresh-container">
@@ -153,5 +585,368 @@
             </section>
         </section>
     </section>
+    <script defer>
+        // Containers
+        const weatherContainer = document.getElementById('weather-container');
+        const settingsContainer = document.getElementById('settings-container');
+
+        // Weather
+        const timeRefreshContainerElement = document.getElementById('time-refresh-container');
+        const timeElement = document.getElementById('time');
+        const refreshElement = document.getElementById('refresh-icon');
+        const refreshingElement = document.getElementById('refreshing-icon');
+
+        const cityElement = document.getElementById('city-name');
+        const skeletonWeatherIconElement = document.getElementById('skeleton-weather-icon');
+        const allWeatherIcons = document.querySelectorAll('.weather-icon');
+        const tempElement = document.getElementById('temperature');
+        const descriptionElement = document.getElementById('weather-description');
+        const windElement = document.getElementById('wind-val');
+        const humidityElement = document.getElementById('humidity-val');
+        const feelsLikeElement = document.getElementById('feels-like-val');
+
+        // Settings
+        const open_settings_icon = document.getElementById('open-settings-icon');
+        const close_settings_icon = document.getElementById('close-settings-icon');
+
+        const yourLocationSetting = document.getElementById('your-location');
+        const customLocationSetting = document.getElementById('custom-location');
+
+        const tempCelsiusSetting = document.getElementById('temp-celsius');
+        const tempFahrenheitSetting = document.getElementById('temp-fahrenheit');
+        const tempKelvinSetting = document.getElementById('temp-kelvin');
+
+        const kmhSetting = document.getElementById('kmh');
+        const mihSetting = document.getElementById('mih');
+
+        const timeMilitarySetting = document.getElementById('time-military');
+        const timeAmPmSetting = document.getElementById('time-am-pm');
+
+        const themeAuto = document.getElementById('theme-auto');
+        const themeLight = document.getElementById('theme-light');
+        const themeDark = document.getElementById('theme-dark');
+
+        const layoutVertical = document.getElementById('layout-vertical');
+        const layoutHorizontal = document.getElementById('layout-horizontal');
+
+        let city = 'Osaka';
+        let useUserLocation = true;
+        let useMetricTempUnit = true;
+        let useKelvinTempUnit = false;
+        let useMetricWindSpeedUnit = true;
+        let timeMilitary = true;
+
+        const refresh = () => {
+            refreshElement.style.display = 'none';
+            refreshingElement.style.display = 'inline';
+
+            setTimeout(() => {
+                timeElement.textContent = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', hour12: !timeMilitary});
+
+                if (useUserLocation === true) {
+                    fetchUserLocation()
+                        .then(location => {
+                            console.log(`latitude: ${location.lat}\nlongitude: ${location.lon}`);
+                            fetchWeatherData(location.lat, location.lon, null);
+                        })
+                        .catch(err => {
+                            console.error(err);
+                        });
+                } else if (useUserLocation === false) {
+                    fetchWeatherData(null, null, city);
+                }
+
+                refreshingElement.style.display = 'none';
+                refreshElement.style.display = 'inline';
+                skeletonWeatherIconElement.style.display = 'none';
+            }, 2000);
+        }
+
+        const openSettings = () => {
+            weatherContainer.style.display = 'none';
+            settingsContainer.style.display = 'flex';
+        }
+
+        const closeSettings = () => {
+            settingsContainer.style.display = 'none';
+            weatherContainer.style.display = 'flex';
+
+            refresh();
+        }
+
+        const toTitleCase = (str) => {
+            return str.replace(/\w\S*/g, (txt) => {
+                return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+            });
+        }
+
+        const fetchUserLocation = () => {
+            return new Promise((resolve, reject) => {
+                navigator.geolocation.getCurrentPosition(position => {
+                        const lat = position.coords.latitude;
+                        const lon = position.coords.longitude;
+                        resolve({ lat, lon });
+                    },
+                    err => {
+                        reject(err);
+                    }
+                );
+            });
+        }
+
+        const fetchWeatherData = (lat, lon, city) => {
+            const API_KEY = '6789d5a6b5cb0ce6f47e021e1fafbf6e';
+            let url;
+
+            if (lat !== undefined && lat !== null && lon !== undefined && lon !== null) {
+                url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}`;
+            } else if (city !== undefined) {
+                url = `http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}`;
+            }
+            
+            fetch(url, {
+                method: 'POST',
+                body: JSON.stringify({ city: city })
+            })
+            .then(res => res.json())
+            .then(data => {
+                const city = data.name;
+                const weatherDescription = data.weather[0].description;
+
+                cityElement.innerHTML = '';
+                cityElement.textContent += `${city}`;
+                
+                allWeatherIcons.forEach(element => {
+                    element.style.display = 'none';
+                });
+                const weatherIcon = `icon-${data.weather[0].icon}`;
+                document.getElementById(weatherIcon).style.display = 'inline';
+
+                let temperature;
+                let feelsLikeTemp;
+                let tempUnit;
+                if (useMetricTempUnit === true && useKelvinTempUnit === false) {
+                    temperature = Math.floor(data.main.temp - 273.15);
+                    feelsLikeTemp = (data.main.feels_like-273.15).toFixed(1);
+                    tempUnit = '°C';
+                } else if (useMetricTempUnit === false && useKelvinTempUnit === false) {
+                    temperature = Math.floor((data.main.temp - 273.15) * 1.8 + 32);
+                    feelsLikeTemp = ((data.main.feels_like - 273.15) * 1.8 + 32).toFixed(1);
+                    tempUnit = '°F';
+                } else if (useKelvinTempUnit === true) {
+                    temperature = data.main.temp;
+                    feelsLikeTemp = data.main.feels_like;
+                    tempUnit = 'K';
+                }
+                tempElement.innerHTML = '';
+                tempElement.innerHTML += `${temperature}<sup>${tempUnit}</sup></sup>`;
+                feelsLikeElement.innerHTML = '';
+                feelsLikeElement.innerHTML = `${feelsLikeTemp}<sup class="details-unit" id="feels-like-unit">${tempUnit}</sup>`;
+                
+                descriptionElement.innerHTML = '';
+                descriptionElement.textContent = `${toTitleCase(weatherDescription)}`;
+
+                let windSpeed;
+                let windSpeedUnit;
+                if (useMetricWindSpeedUnit === true) {
+                    windSpeed = (data.wind.speed * 3.6).toFixed(1);
+                    windSpeedUnit = 'KPH';
+                } else if (useMetricWindSpeedUnit === false) {
+                    windSpeed = (data.wind.speed * 2.237).toFixed(1);
+                    windSpeedUnit = 'MPH';
+                }
+                windElement.innerHTML = '';
+                windElement.innerHTML = `${windSpeed}<span class="details-unit" id="wind-unit">${windSpeedUnit}</span>`
+
+                humidityElement.innerHTML = '';
+                humidityElement.innerHTML = `${data.main.humidity}<span class="details-unit" id="humidity-unit">%</span>`;
+
+                console.log(data);
+            })
+            .catch(err => {
+                console.error('Error fetching weather data:', err);
+                document.getElementById('skeleton-weather-icon').style.display = 'block';
+            });
+        }
+
+        timeRefreshContainerElement.addEventListener('click', refresh);
+
+        open_settings_icon.addEventListener('click', openSettings);
+        close_settings_icon.addEventListener('click', closeSettings);
+
+        yourLocationSetting.addEventListener('click', () => {
+            if (yourLocationSetting.className !== 'selected-double-button') {
+                yourLocationSetting.className = 'selected-double-button';
+                customLocationSetting.className = 'unselected-double-button';
+                useUserLocation = true;
+            } else {
+                useUserLocation = true;
+                console.log('Setting already selected');
+            }
+        });
+
+        customLocationSetting.addEventListener('click', () => {
+            if (customLocationSetting.className !== 'selected-double-button') {
+                customLocationSetting.className = 'selected-double-button';
+                yourLocationSetting.className = 'unselected-double-button';
+                useUserLocation = false;
+            } else {
+                useUserLocation = false;
+                console.log('Setting already selected');
+            }
+        });
+
+        tempCelsiusSetting.addEventListener('click', () => {
+            if (tempCelsiusSetting.className !== 'selected-tripple-button') {
+                tempCelsiusSetting.className = 'selected-tripple-button';
+                tempFahrenheitSetting.className = 'unselected-tripple-button';
+                tempKelvinSetting.className = 'unselected-tripple-button';
+                useMetricTempUnit = true;
+                useKelvinTempUnit = false;
+            } else {
+                tempFahrenheitSetting.className = 'unselected-tripple-button';
+                tempKelvinSetting.className = 'unselected-tripple-button';
+                useMetricTempUnit = true;
+                useKelvinTempUnit = false;
+                console.log('Setting already selected');
+            }
+        });
+
+        tempFahrenheitSetting.addEventListener('click', () => {
+            if (tempFahrenheitSetting.className !== 'selected-tripple-button') {
+                tempFahrenheitSetting.className = 'selected-tripple-button';
+                tempCelsiusSetting.className = 'unselected-tripple-button';
+                tempKelvinSetting.classList = 'unselected-tripple-button';
+                useMetricTempUnit = false;
+                useKelvinTempUnit = false;
+            } else {
+                tempCelsiusSetting.className = 'unselected-tripple-button';
+                tempKelvinSetting.classList = 'unselected-tripple-button';
+                useMetricTempUnit = false;
+                useKelvinTempUnit = false;
+                console.log('Setting already selected');
+            }
+        });
+
+        tempKelvinSetting.addEventListener('click', () => {
+            if (tempKelvinSetting.className !== 'selected-tripple-button') {
+                tempKelvinSetting.className = 'selected-tripple-button';
+                tempCelsiusSetting.className = 'unselected-tripple-button';
+                tempFahrenheitSetting.className = 'unselected-tripple-button';
+                useKelvinTempUnit = true;
+            } else {
+                tempCelsiusSetting.className = 'unselected-tripple-button';
+                tempFahrenheitSetting.className = 'unselected-tripple-button';
+                useKelvinTempUnit = true;
+                console.log('Setting already selected');
+            }
+        });
+
+        kmhSetting.addEventListener('click', () => {
+            if (kmhSetting.className !== 'selected-double-button') {
+                kmhSetting.className = 'selected-double-button';
+                mihSetting.className = 'unselected-double-button';
+                useMetricWindSpeedUnit = true;
+            } else {
+                mihSetting.className = 'unselected-double-button';
+                useMetricWindSpeedUnit = true;
+                console.log('Setting already selected');
+            }
+        });
+
+        mihSetting.addEventListener('click', () => {
+            if (mihSetting.className !== 'selected-double-button') {
+                mihSetting.className = 'selected-double-button';
+                kmhSetting.className = 'unselected-double-button';
+                useMetricWindSpeedUnit = false;
+            } else {
+                kmhSetting.className = 'unselected-double-button';
+                useMetricWindSpeedUnit = false;
+                console.log('Setting already selected');
+            }
+        });
+
+        timeMilitarySetting.addEventListener('click', () => {
+            if (timeMilitarySetting.className !== 'selected-double-button') {
+                timeMilitarySetting.className = 'selected-double-button';
+                timeAmPmSetting.className = 'unselected-double-button';
+                timeMilitary = true;
+            } else {
+                timeAmPmSetting.className = 'unselected-double-button';
+                timeMilitary = true;
+                console.log('Setting already selected');
+            }
+        });
+
+        timeAmPmSetting.addEventListener('click', () => {
+            if (timeAmPmSetting.className !== 'selected-double-button') {
+                timeAmPmSetting.className = 'selected-double-button';
+                timeMilitarySetting.className = 'unselected-double-button';
+                timeMilitary = false;
+            } else {
+                timeMilitarySetting.className = 'unselected-double-button';
+                timeMilitary = false;
+                console.log('Setting already selected');
+            }
+        });
+
+        themeAuto.addEventListener('click', () => {
+            if (themeAuto.className !== 'selected-tripple-button') {
+                themeAuto.className = 'selected-tripple-button';
+                themeLight.className = 'unselected-tripple-button';
+                themeDark.className = 'unselected-tripple-button'
+            } else {
+                themeLight.className = 'unselected-tripple-button';
+                themeDark.className = 'unselected-tripple-button';
+                console.log('Setting already selected')
+            }
+        });
+
+        themeLight.addEventListener('click', () => {
+            if (themeLight.className !== 'selected-tripple-button') {
+                themeLight.className = 'selected-tripple-button';
+                themeAuto.className = 'unselected-tripple-button';
+                themeDark.className = 'unselected-tripple-button'
+            } else {
+                themeAuto.className = 'unselected-tripple-button';
+                themeDark.className = 'unselected-tripple-button';
+                console.log('Setting already selected')
+            }
+        });
+
+        themeDark.addEventListener('click', () => {
+            if (themeDark.className !== 'selected-tripple-button') {
+                themeDark.className = 'selected-tripple-button';
+                themeAuto.className = 'unselected-tripple-button';
+                themeLight.className = 'unselected-tripple-button'
+            } else {
+                themeAuto.className = 'unselected-tripple-button';
+                themeLight.className = 'unselected-tripple-button';
+                console.log('Setting already selected')
+            }
+        });
+
+        layoutVertical.addEventListener('click', () => {
+            if (layoutVertical.className !== 'selected-double-button') {
+                layoutVertical.className = 'selected-double-button';
+                layoutHorizontal.className = 'unselected-double-button';
+            } else {
+                layoutHorizontal.className = 'unselected-double-button';
+                console.log('Setting already selected');
+            }
+        });
+
+        layoutHorizontal.addEventListener('click', () => {
+            if (layoutHorizontal.className !== 'selected-double-button') {
+                layoutHorizontal.className = 'selected-double-button';
+                layoutVertical.className = 'unselected-double-button';
+            } else {
+                layoutVertical.className = 'unselected-double-button';
+                console.log('Setting already selected');
+            }
+        });
+
+        refresh();
+    </script>
 </body>
 </html>
