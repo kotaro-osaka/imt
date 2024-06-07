@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wetter Widget</title>
-</head>
-<body>
     <style>
         @import url('https://fonts.googleapis.com/css?family=Poppins:700|Poppins:400');
 
@@ -440,6 +438,8 @@
             }
         } */
     </style>
+</head>
+<body>
     <main id="weather-container">
         <header id="top-nav">
             <div class="top-nav-item" id="time-refresh-container">
@@ -531,8 +531,8 @@
                     <h5>Wind Speed Unit</h5>
                 </header>
                 <section class="double-button-container">
-                    <button class="selected-double-button" id="kmh">km/h</button>
-                    <button class="unselected-double-button" id="mih">mi/h</button>
+                    <button class="selected-double-button" id="kmh">KPH</button>
+                    <button class="unselected-double-button" id="mih">MPH</button>
                 </section>
             </section>
             <section class="settings-body-item" id="time">
@@ -585,7 +585,7 @@
             </section>
         </section>
     </section>
-    <script defer>
+    <script>
         // Containers
         const weatherContainer = document.getElementById('weather-container');
         const settingsContainer = document.getElementById('settings-container');
