@@ -21,11 +21,11 @@
 	<section id="formular">
 		<h2>Formular f&uuml;r einen Eintrag ins ...</h2>
 		<?php
-		// Bei POST requests werden Daten aus Submit-Button "submit" und Inputs "ersteller" & "eintrag" in dazugehörigen Variablen gespeichert
+		// Bei POST requests werden Daten aus Submit-Button "submit" und Inputs `ersteller` & `eintrag` in dazugehörigen Variablen gespeichert
 		$Submit = $_POST['submit'];
 		$Ersteller = $_POST['ersteller'];
 		$Eintrag = $_POST['eintrag'];
-		// Wenn "Submit == true" und Daten in Inputs nicht leere Strings
+		// Wenn `Submit == true` und Daten in Inputs nicht leere Strings
 		if ($Submit && ($Ersteller != "") && ($Eintrag != "")) {
 			$verbindung = mysql_connect("localhost", "ci3o", "ci3o"); // Verbindung mit MySQL Server herstellen (username: "ci3o", password: "ci3o")
 			// Wenn Verbinung nicht hergestellt werden kann
@@ -34,7 +34,7 @@
 				exit; // Datenbankverbindungsversuch abbrechen
 			}
 			$eingabe = "INSERT INTO gaestebuch (Ersteller, Eintrag) VALUES ('$Ersteller','$Eintrag')"; // SQL-Abfrage
-			$erg = mysql_db_query("aito", $eingabe, $verbindung); // Resultat aus SQL-Abfrage "eingabe" auf Datenbank "aito" durch bestehende Verbindung in "verbindung"
+			$erg = mysql_db_query("aito", $eingabe, $verbindung); // Resultat aus SQL-Abfrage `$eingabe` auf Datenbank `aito` durch bestehende Verbindung in `verbindung`
 			echo "<p>Ihre Daten von der IP " . $_SERVER['REMOTE_ADDR'] . " wurden abgeschickt! Vielen Dank!</p>"; // String mit IP Adresse des Clients wird auf Website dargestellt 
 			mysql_close($verbindung); // Verbindung zu Datenbank schließen
 			echo "<p>Ihr n&auml;chster Eintrag:</p>"; // String auf Website darstellen
@@ -42,34 +42,35 @@
 		?>
 		<!-- Dateiname des derzeit ausgefuehrten Skript -->
 		<form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
-			Name (Ersteller): <input type="text" name="ersteller" value="<?php echo $Ersteller; ?>" size="15">
-			Eintrag: <input type="text" name="eintrag" value="">
+			Name (Ersteller): <input type="text" name="ersteller" value="<?php echo $Ersteller; ?>" size="15"> <!-- Default-Wert -->
+			Eintrag: <input type="text" name="eintrag">
 			<input type="submit" name="submit" value="Abschicken">
 		</form>
 	</section>
 	<section id="content">
 		<h2>Ausgabe der Eintr&auml;ge im ...</h2>
 		<?php
-		$verbindung = mysql_connect("localhost", "ci3o", "ci3o");
-		$abfrage = "SELECT EintragID, Ersteller, Eintrag, Erstelldatum FROM gaestebuch ORDER BY Erstelldatum DESC";
-		$erg = mysql_db_query("ci3o", $abfrage, $verbindung);
-		$anz_eintraege = mysql_num_rows($erg);
+		$verbindung = mysql_connect("localhost", "ci3o", "ci3o"); // Verbindung herstellen
+		$abfrage = "SELECT EintragID, Ersteller, Eintrag, Erstelldatum FROM gaestebuch ORDER BY Erstelldatum DESC"; // SQL Abfrage
+		$erg = mysql_db_query("ci3o", $abfrage, $verbindung); // Resultat aus SQL-Abfrage `$abfrage`
+		$anz_eintraege = mysql_num_rows($erg); // Anzahl zurueckgegebener Datensaetze
 		if ($anz_eintraege == 0) {
 			echo "<p> Es wurde kein Datensatz vom DB-Server zurückgegeben </p>";
 		} else {
 			echo "<p> Anzahl Eintr&auml;ge: " . $anz_eintraege . " </p>";
+			// Pro Datensatz in `$anz_eintraege` einen Artikel
 			$i = 0;
 			while ($i < $anz_eintraege) {
 		?>
 				<article class="Eintrag">
-					<pre><?php print_r(mysql_fetch_array($erg, MYSQL_ASSOC)); ?></pre>
+					<pre><?php print_r(mysql_fetch_array($erg, MYSQL_ASSOC)); ?></pre> <!-- Print `$erg` as assosiative array -->
 				</article>
 		<?php
 				$i++;
 			}
-			mysql_free_result($erg);
+			mysql_free_result($erg); // Gibt belegten Speicher von `$erg` frei
 		}
-		mysql_close($verbindung);
+		mysql_close($verbindung); // Verbindung schliessen
 		?>
 	</section>
 	<footer>
