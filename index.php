@@ -9,6 +9,11 @@
 </head>
 <!-- mysql_*-Funktionen werden nicht mehr verwendet, da sie ab PHP 5.5.0 veraltet sind und in PHP 7.0.0 vollständig entfernt wurden. -->
 <body>
+	<?php 
+	$dsn = "mysql:host=localhost;dbname=aito";
+	$dbusername = "ci30";
+	$dbpassword = "ci30";
+	?>
 	<header>
 		<?php
 		$DatumUhrzeit = date("d.m.Y, H:i:s", time()); // Aktuelle Uhrzeit
@@ -27,18 +32,32 @@
 		$Eintrag = $_POST['eintrag'];
 		// Wenn `Submit == true` und Daten in Inputs nicht leere Strings
 		if ($Submit && ($Ersteller != "") && ($Eintrag != "")) {
-			$verbindung = mysql_connect("localhost", "ci3o", "ci3o"); // Verbindung mit MySQL Server herstellen (username: "ci3o", password: "ci3o")
-			// Wenn Verbinung nicht hergestellt werden kann
-			if (!$verbindung) {
-				echo "Keine Verbindung möglich!\n"; // String auf Website darstellen
-				exit; // Datenbankverbindungsversuch abbrechen
+			try {
+				try {
+					$pdo = new PDO($dsn, $dbusername, $dbpassword); // Verbindung mit MySQL Server herstellen
+					$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Errorhandling zu exception aendern
+					$eingabe = "INSERT INTO gaestebuch (Ersteller, Eintrag) VALUES (?, ?);"; // SQL-Abfrage, `;` zu SQL Statement hinzugefügt, Daten werden spaeter eingefuegt
+					$stmt = $pdo->prepare($eingabe); // SQL-Abfrage fuer Ausfuehrung als Statement vorbereiten
+					$stmt->execute([$Ersteller, $Eintrag]); // Vorbereitetes Statement-Objekt mit eingefuegten Daten ausfuehren
+					$pdo = null; // Verbindung zu Datenbank ueber pdo schliessen
+					$stmt = null; // Verbindung zu Statement schliessen
+					// $erg = mysql_db_query("aito", $eingabe, $verbindung); // Resultat aus SQL-Abfrage `$eingabe` auf Datenbank `aito` durch bestehende Verbindung in `verbindung`
+					echo "<p>Ihre Daten von der IP " . $_SERVER['REMOTE_ADDR'] . " wurden abgeschickt! Vielen Dank!</p>"; // String mit IP Adresse des Clients wird auf Website dargestellt 
+					die(); // Verbindung zu Datenbank schliessen
+				} catch (PDOException $e) {
+					die("Query failed: " . $e->getMessage());
+				}
+			} catch (PDOException $e) {
+				echo "Connection failed: " . $e->getMessage();
 			}
-			$eingabe = "INSERT INTO gaestebuch (Ersteller, Eintrag) VALUES ('$Ersteller','$Eintrag')"; // SQL-Abfrage
-			$erg = mysql_db_query("aito", $eingabe, $verbindung); // Resultat aus SQL-Abfrage `$eingabe` auf Datenbank `aito` durch bestehende Verbindung in `verbindung`
-			echo "<p>Ihre Daten von der IP " . $_SERVER['REMOTE_ADDR'] . " wurden abgeschickt! Vielen Dank!</p>"; // String mit IP Adresse des Clients wird auf Website dargestellt 
-			mysql_close($verbindung); // Verbindung zu Datenbank schließen
-			echo "<p>Ihr n&auml;chster Eintrag:</p>"; // String auf Website darstellen
+			// $verbindung = mysql_connect("localhost", "ci3o", "ci3o"); // Verbindung mit MySQL Server herstellen (username: "ci3o", password: "ci3o")
+			// Wenn Verbinung nicht hergestellt werden kann
+			// if (!$verbindung) {
+			// echo "Keine Verbindung möglich!\n"; // String auf Website darstellen
+			// exit; // Datenbankverbindungsversuch abbrechen
 		}
+			// mysql_close($verbindung); // Verbindung zu Datenbank schließen
+		echo "<p>Ihr n&auml;chster Eintrag:</p>"; // String auf Website darstellen
 		?>
 		<!-- Dateiname des derzeit ausgefuehrten Skript -->
 		<form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
@@ -50,10 +69,17 @@
 	<section id="content">
 		<h2>Ausgabe der Eintr&auml;ge im ...</h2>
 		<?php
-		$verbindung = mysql_connect("localhost", "ci3o", "ci3o"); // Verbindung herstellen
-		$abfrage = "SELECT EintragID, Ersteller, Eintrag, Erstelldatum FROM gaestebuch ORDER BY Erstelldatum DESC"; // SQL Abfrage
-		$erg = mysql_db_query("ci3o", $abfrage, $verbindung); // Resultat aus SQL-Abfrage `$abfrage`
+		try {
+			$pdo = new PDO($dsn, $dbusername, $dbpassword); // Verbindung mit MySQL Server herstellen
+			$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Errorhandling zu exception aendern
+			$abfrage = "SELECT EintragID, Ersteller, Eintrag, Erstelldatum FROM gaestebuch ORDER BY Erstelldatum DESC"; // SQL Abfrage
+			$erg = mysql_db_query("ci3o", $abfrage, $verbindung); // Resultat aus SQL-Abfrage `$abfrage`
 		$anz_eintraege = mysql_num_rows($erg); // Anzahl zurueckgegebener Datensaetze
+		} catch (PDOException $e) {
+			echo "Connection failed: " . $e->getMessage();
+		}
+		// $verbindung = mysql_connect("localhost", "ci3o", "ci3o"); // Verbindung herstellen
+		
 		if ($anz_eintraege == 0) {
 			echo "<p> Es wurde kein Datensatz vom DB-Server zurückgegeben </p>";
 		} else {
