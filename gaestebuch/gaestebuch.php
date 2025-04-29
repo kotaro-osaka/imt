@@ -63,6 +63,8 @@
 			echo '<p><strong>Ersteller:</strong> ' . htmlspecialchars($row['Ersteller']) . '</p>';
 			echo '<p><strong>Eintrag:</strong> ' . htmlspecialchars($row['Eintrag']) . '</p>';
 			echo '<p><strong>Erstelldatum:</strong> ' . htmlspecialchars($row['Erstelldatum']) . '</p>';
+			echo '<button' . 'id="' . htmlspecialchars($row['EintragID']) . '" type=submit>Update</button>';
+			echo '<button' . 'id="' . htmlspecialchars($row['EintragID']) . '" type=submit>Delete</button>';
 			echo '</article>';
 			echo '<hr>';
 		}
@@ -77,7 +79,7 @@
 		?>
 	</section>
 	<footer>
-		<p>Beispiel einer db-gestützten Webanwendung in PHP mit MySQL/MariaDB</>
+		<p>Beispiel einer DB-gestützten Webanwendung in PHP mit MySQL/MariaDB</>
 	</footer>
 </body>
 
